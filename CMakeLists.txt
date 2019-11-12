@@ -3,4 +3,4 @@ project(bridges)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(bridges main.cpp graph.h)
+add_executable(bridges main.cpp graph.h algorithms.h)
