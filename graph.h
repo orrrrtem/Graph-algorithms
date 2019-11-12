@@ -27,16 +27,17 @@ public:
     {
         this->rows = rows;
         this->cols = cols;
-        num_edges = rows.size() - 1;
-        num_vert = rows.back();
+        num_vert = rows.size() - 1;
+        num_edges = rows.back();
+        cout << "|V|=" <<num_vert << "  |E|=" << num_edges << endl;
     }
 
 
-    pair<int, int> get_neighbors(int i)
+    pair<int, int> get_neighbors(int i) const
     {
         return make_pair(rows[i], rows[i+1]);
     }
-    int get_size_neighbors(int i)
+    int get_size_neighbors(int i) const
     {
         return (rows[i+1] - rows[i]);
     }
