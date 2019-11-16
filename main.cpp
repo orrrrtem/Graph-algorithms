@@ -19,8 +19,8 @@ int main() {
     }
     cout << endl;
 
-    finding_bridges_dfs_method(g);
 
+    dfs_bridges sol1(g);
 
     return 0;
 }

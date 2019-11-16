@@ -7,47 +7,65 @@
 
 #include "graph.h"
 
-void finding_bridges_dfs_method_(CSRgraph & g, int u, int & iter, vector<int> & enter, vector<int> & ret, vector<bool> &used);
 
-void finding_bridges_dfs_method(CSRgraph &g)
-{
-    int iter = 0;
-    vector<int> enter(g.num_vert, 0);
-    vector<int> ret(g.num_vert, 0);
-    vector<bool> used(g.num_vert, false);
-    int init_vert = 3;
-    finding_bridges_dfs_method_(g, init_vert, iter, enter, ret, used);
 
+void print_bridge(int v, int to) {
+    cout << "Bridge: (" << v << "," << to << ")" << endl;
 }
-void finding_bridges_dfs_method_(CSRgraph & g, int u, int & iter, vector<int> & enter, vector<int> & ret, vector<bool> &used)
-{
-    iter += 1;
-    enter[u] = iter;
-    ret[u] = iter;
 
-    pair<int, int> Nu = g.get_neighbors(u);
-    for(int i_ = Nu.first; i_ < Nu.second; i_++ )
-    {
-        int i = g.cols[i_];
 
-        int to = i;
-        if(to == -1)
+
+class dfs_bridges {
+
+    vector<bool> visited;
+    vector<int> tin, low;
+    int timer;
+
+
+
+
+
+    void dfs(const CSRgraph &g, int v, int p = -1) {
+        visited[v] = true;
+        tin[v] = low[v] = timer++;
+
+        pair<int, int> Nv = g.get_neighbors(v);
+        for (int to_ = Nv.first; to_ < Nv.second; to_++)
+            //for (int to : adj[v]) {
         {
-            continue;
-        }
-        if (used[to] == true)
-        {
-            ret[u] = min( ret[u], enter[to]);
-        }
-        else
-        {
-            finding_bridges_dfs_method_(g,to, iter, enter, ret, used);
-            ret[u] = min( ret[u], enter[to]);
-            if (ret[to] > enter[u])
-            {
-                cout << "bridge (" << u <<"," << to <<")" << endl;
+            int to = g.cols[to_];
+            if (to == p) continue;
+            if (visited[to]) {
+                low[v] = min(low[v], tin[to]);
+            } else {
+                dfs(g, to, v);
+                low[v] = min(low[v], low[to]);
+                if (low[to] > tin[v])
+                    print_bridge(v, to);
+
             }
         }
     }
-}
+
+    void find_bridges(const CSRgraph &g) {
+        timer = 0;
+        visited.assign(g.num_vert, false);
+        tin.assign(g.num_vert, -1);
+        low.assign(g.num_vert, -1);
+        for (int i = 0; i < g.num_vert; ++i) {
+            if (!visited[i])
+                dfs(g, i);
+        }
+    }
+public:
+    dfs_bridges(const CSRgraph & g)
+    {
+        cout << "Searching bridges with dfs method started" << endl;
+        find_bridges(g);
+    }
+};
+
+
+
+
 #endif //BRIDGES_ALGORITHMS_H
