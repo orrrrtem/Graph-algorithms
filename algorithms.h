@@ -20,6 +20,7 @@ class dfs_bridges {
     vector<bool> visited;
     vector<int> tin, low;
     int timer;
+    int bridges_counter = 0;
 
 
 
@@ -41,12 +42,15 @@ class dfs_bridges {
                 dfs(g, to, v);
                 low[v] = min(low[v], low[to]);
                 if (low[to] > tin[v])
-                    print_bridge(v, to);
+                {
+                    //print_bridge(v, to);
+                    bridges_counter++;
+                }
 
             }
         }
     }
-
+public:
     void find_bridges(const CSRgraph &g) {
         timer = 0;
         visited.assign(g.num_vert, false);
@@ -57,12 +61,14 @@ class dfs_bridges {
                 dfs(g, i);
         }
     }
-public:
+
     dfs_bridges(const CSRgraph & g)
     {
-        cout << "Searching bridges with dfs method started" << endl;
+        //cout << "Searching bridges with dfs method started" << endl;
         find_bridges(g);
+        cout << " num_bridges " << bridges_counter << "\t";
     }
+    dfs_bridges(){}
 };
 
 
