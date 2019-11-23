@@ -78,42 +78,65 @@ void radixsort(vector<pair <weight_type, pair<int,int> >> & weights_for_componen
 template< class weight_type>
 void bucketSort(vector<pair <weight_type, pair<int,int> >> & weights_for_component)
 {
-    //cout << "sad";
-    /*
-    int n = (int) weights_for_component.size();
-    weight_type mx = get_max(weights_for_component);
-    weight_type mn = get_min(weights_for_component);
-    vector<vector<pair <weight_type, pair<int,int> >>> bucket(n) ;
-    //vector<pair <weight_type, pair<int,int> >> bucket[10];
-    //cout << "s        SSSSSSSS";
-    auto bucket_range = ((mx-mn + 1) / n);
-
-
-    for (int i=0; i < n; i++)
+    int n = weights_for_component.size();
+    if (n == 0)
     {
-        int bucket_index = weights_for_component[i].first / bucket_range;
-        bucket[bucket_index].push_back(&weights_for_component[i]);
+        return;
     }
 
+    weight_type mx = get_max(weights_for_component);
+    weight_type mn = get_min(weights_for_component);
+    vector<vector<pair <weight_type, pair<int,int> > > > bucket(n) ;
+    auto bucket_range = ((mx-mn) / n) + 1;
 
-    vector<pair <weight_type, pair<int,int> >>* bucket = new vector<pair <weight_type, pair<int,int> >>[n];
-    int bucket_range = (numeric_limits<weight_type>::max() ) / n;
+
     for (int i=0; i < n; i++)
     {
-        int bucket_index = weights_for_component[i].first / bucket_range;
+        int bucket_index = (weights_for_component[i].first - mn) / bucket_range;
         bucket[bucket_index].push_back(weights_for_component[i]);
     }
 
 
-    for (int i=0; i<n; i++)
-        std::sort(bucket[i].begin(), bucket[i].end());
 
     int index = 0;
     for (int i = 0; i < n; i++)
         for (int j = 0; j < bucket[i].size(); j++)
             weights_for_component[index++] = bucket[i][j];
 
-*/
+
+}
+
+
+
+template< class weight_type>
+void bucketTreesSort(vector<pair <weight_type, pair<int,int> >> & weights_for_component)
+{
+    int n = weights_for_component.size();
+    if (n == 0)
+    {
+        return;
+    }
+
+    weight_type mx = get_max(weights_for_component);
+    weight_type mn = get_min(weights_for_component);
+    vector<set<pair <weight_type, pair<int,int> > > > bucket(n) ;
+    auto bucket_range = ((mx-mn) / n) + 1;
+
+
+    for (int i=0; i < n; i++)
+    {
+        int bucket_index = (weights_for_component[i].first - mn) / bucket_range;
+        bucket[bucket_index].insert(weights_for_component[i]);
+    }
+
+
+
+    int index = 0;
+    for (int i = 0; i < n; i++)
+        for (auto j: bucket[i])
+            weights_for_component[index++] = j;
+
+
 }
 
 

@@ -26,7 +26,7 @@ int main() {
 
     dfs_bridges sol1(g);
     cout << endl;
-    //randomized_two_bridges<short > solution1(&g, bucket_sort);
+    randomized_two_bridges<short > solution1(&g, bucket_sort);
 
 
 

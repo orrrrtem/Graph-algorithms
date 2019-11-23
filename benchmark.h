@@ -91,7 +91,7 @@ void randomized_two_bridges_combo(sort_choice sort_type) {
 
 
             t1 = std::chrono::high_resolution_clock::now();
-            //randomized_two_bridges<int> solution3(&g_inner,bucket_sort);
+            randomized_two_bridges<int> solution3(&g_inner,bucket_sort);
             t2 = std::chrono::high_resolution_clock::now();
             std::cout << " Bucket sort:    n = " << n << ";\tp = " << p_vec[j] << "\ttime: "
                       << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count()

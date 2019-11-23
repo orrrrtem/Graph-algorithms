@@ -351,8 +351,8 @@ class randomized_two_bridges {
             }
             case bucket_sort:
             {
-               // cout << "B S" << endl;
                 bucketSort(weights_for_component);
+                //bucketTreesSort(weights_for_component);
                 break;
             }
 
@@ -393,14 +393,9 @@ class randomized_two_bridges {
 public:
     void find_bridges()
     {
-        //timer = 0;
-        //g = g_;
         visited.assign(g->num_vert, false);
-        //tin.assign(g.num_vert, -1);
-        //label_type random_number = rand() % INT_MAX;
         weights.resize(g->num_edges);
         fill(weights.begin(), weights.end(), -1);
-        //weights_for_component.reserve(g->num_edges);
         for (int i = 0; i < g->num_vert; ++i)
         {
             if (!visited[i])
