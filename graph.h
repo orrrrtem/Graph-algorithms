@@ -36,6 +36,7 @@ public:
         this->cols = cols;
         num_vert = rows.size() - 1;
         num_edges = rows.back();
+
         cout << "|V|=" <<num_vert << "  |E|=" << num_edges << endl;
     }
 

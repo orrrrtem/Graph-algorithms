@@ -2,15 +2,18 @@
 #include <unistd.h>
 #include "graph.h"
 #include "algorithms.h"
+#include "benchmark.h"
 
 
 using namespace std;
 
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
-    vector<int> rows = {0,2,4,6,9,12,14,16,18};
-    vector<int> cols = {1,2,0,3,0,3,1,2,4,3,5,7,4,6,5,7,4,6};
+
+    //vector<int> rows = {0,2,4,6,9,12,14,16,18,19,20};
+    //vector<int> cols = {1,2,0,3,0,3,1,2,4,3,5,7,4,6,5,7,4,6,9,8};
+    vector<int> rows = {0,3,6,10,14,19,22,25,28, 31, 33 , 35, 38};
+    vector<int> cols = {1,2,3,0,2,3,0,1,3,4,0,1,2,4,2,3,5,6,7,4,6,7,4,5,7,4,5,6, 9, 10, 11, 8,11,8, 11,8,9,10};
     CSRgraph g(rows,cols);
     pair<int, int> Ni = g.get_neighbors(1);
     cout << g.get_size_neighbors(1) << endl;
@@ -21,6 +24,14 @@ int main() {
     }
     cout << endl;
 
+    dfs_bridges sol1(g);
+    cout << endl;
+    //randomized_two_bridges<short > solution1(&g, bucket_sort);
+
+
+
+
+/*
     auto t1 = std::chrono::high_resolution_clock::now();
     CSRgraph g1 = create_graph(1000, 0.001);
     auto t2 = std::chrono::high_resolution_clock::now();
@@ -34,40 +45,16 @@ int main() {
     cout << g1.num_vert << " " << g1.num_edges << endl;
     //g1.print_CSR();
     t1 = std::chrono::high_resolution_clock::now();
-    dfs_bridges solution1(g1);
+    dfs_bridges solution2(g1);
     t2 = std::chrono::high_resolution_clock::now();
     std::cout << "generating took "
             << std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count()
             << " microseconds\n";
+*/
 
 
-    vector<double> p_vec ;
-    double start_p = 0.0001;
-    for (int scale = 1; scale < 5;scale++)
-    {
+    randomized_two_bridges_combo(bucket_sort);
 
-        for (int s = 1; s < 10; s++)
-        {
-            p_vec.push_back(start_p*s);
-        }
-        start_p = start_p * 10;
-    }
-
-    for(int n = 100; n < 10001; n=n*10)
-    {
-
-        for(int j = 0; j < p_vec.size(); j++)
-        {
-            CSRgraph g_inner = create_graph(n, p_vec[j]);
-
-            t1 = std::chrono::high_resolution_clock::now();
-            dfs_bridges solution1(g_inner);
-            t2 = std::chrono::high_resolution_clock::now();
-            std::cout << "n = " << n << ";\tp = " << p_vec[j] << "\ttime: "
-                      << std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count()
-                      << " microseconds\n";
-        }
-    }
 
     return 0;
 }
