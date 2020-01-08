@@ -18,19 +18,20 @@ using namespace std;
 static std::random_device rd;
 static std::mt19937 gen(rd());
 
+//TODO make uint
 class CSRgraph
 {
 public:
-    int num_vert;
-    int num_edges;
+    unsigned int num_vert;
+    unsigned int num_edges;
 
-    vector<int> rows;
-    vector<int> cols;
+    vector<unsigned int> rows;
+    vector<unsigned int> cols;
 
 
     CSRgraph(){}
 
-    CSRgraph(vector<int> rows, vector<int> cols)
+    CSRgraph(vector<unsigned int> rows, vector<unsigned int> cols)
     {
         this->rows = rows;
         this->cols = cols;
@@ -40,12 +41,12 @@ public:
         cout << "|V|=" <<num_vert << "  |E|=" << num_edges << endl;
     }
 
-    CSRgraph(const vector<set<int>>& adj_list)
+    CSRgraph(const vector<set<unsigned int>>& adj_list)
     {
-        vector<int> rows(adj_list.size()+1, 0);
-        vector<int> cols;
-        int prefix_sum = 0;
-        for(int i = 0; i < adj_list.size(); i ++)
+        vector<unsigned int> rows(adj_list.size()+1, 0);
+        vector<unsigned int> cols;
+        unsigned int prefix_sum = 0;
+        for(unsigned int i = 0; i < adj_list.size(); i ++)
         {
             prefix_sum += adj_list[i].size();
             rows[i+1] = prefix_sum;
@@ -62,25 +63,32 @@ public:
         //cout << "|V|=" <<num_vert << "  |E|=" << num_edges << endl;
     }
 
+    unsigned int get_num_vert() const {
+        return num_vert;
+    }
 
-    pair<int, int> get_neighbors(int i) const
+    unsigned int get_num_edges() const {
+        return num_edges;
+    }
+
+    pair<unsigned int, unsigned int> get_neighbors(unsigned int i) const
     {
         return make_pair(rows[i], rows[i+1]);
     }
-    int get_size_neighbors(int i) const
+    unsigned int get_size_neighbors(unsigned int i) const
     {
         return (rows[i+1] - rows[i]);
     }
 
     void print_CSR() const
     {
-        for(int i = 0; i < num_vert; i++)
+        for(unsigned int i = 0; i < num_vert; i++)
         {
             cout << "Vert " << i <<": ";
             auto Ni = get_neighbors(i);
-            for(int j_ = Ni.first; j_ < Ni.second; j_++)
+            for(unsigned int j_ = Ni.first; j_ < Ni.second; j_++)
             {
-                int j = cols[j_];
+                unsigned int j = cols[j_];
                 cout << j << " ";
             }
             cout << endl;
@@ -93,21 +101,21 @@ public:
 
 
 //creating graph with probability of edge creating p_in. Edge's wight characteristics are math expection and dispersion.
-CSRgraph create_graph(int n, double p_in)
+CSRgraph create_graph(unsigned int n, double p_in)
 {
     if(n < 0)
         exit(-1);
     if(p_in < 0 || p_in > 1)
         exit(-1);
-    vector<set<int>> adj_list(n);
+    vector<set<unsigned int>> adj_list(n);
 
     //random_device generator;
     bernoulli_distribution pd(p_in);
 
     //std::poisson_distribution<int> pd((double)n*p_in);
-    for(int i = 0; i < n; i++)
+    for(unsigned int i = 0; i < n; i++)
     {
-        for (int j = i+1; j < n; j++)
+        for (unsigned int j = i+1; j < n; j++)
         {
             if (pd(gen))
             //if((rand() % n) < (p_in*n))
