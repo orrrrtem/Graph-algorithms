@@ -11,6 +11,8 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <sstream>
+
 using namespace std;
 
 
@@ -18,73 +20,52 @@ class reader
 {
 public:
     vector<set<unsigned  int>> adj_list;
-    vector<unsigned int> src;
-    vector<unsigned int> dst;
     unsigned int maxID = 0;
     CSRgraph graph;
 
 
 
 
-    reader(const string file_path )
+    reader(const string& filename )
     {
-        ifstream file(file_path);
-        //ifstream file("/Users/artemaroslankin/Documents/Progacpp/untitled1/input.txt");
-        char symbol;
-        unsigned int  src_, dst_;
-        src.clear();
-        dst.clear();
-        int count = 0;
-        adj_list.reserve(2000001);
-        adj_list.resize(2000000);
-        cout << "reserved" << endl;
-        if(file.is_open()){
-
-/*
-            while(! file.eof() )
-            {
-                    string src__;
-                    string dst__;
-                    getline(file,src__, ' ');
-                    getline(file,dst__, ' ');
-                    src.push_back(src_);
-                    dst.push_back(dst_);
-                    if(maxID < src_) maxID = src_;
-                    if(maxID < dst_) maxID = dst_;
-            }
-            */
-            while(file >> src_ >> dst_) {
-                //file >> src_;
-                //cout << v2 << "\n";
-
-                adj_list[src_].insert(dst_);
-                adj_list[dst_].insert(src_);
-                //src.push_back(src_);
-               // file >> dst_;
-               // dst.push_back(dst_);
-                //cout <<  src.back() << " " << dst.back() << endl;
-
-               //if(src_ > 20) break;
-              count++;
-              //cout << count;
-            }
+        vector<unsigned int> source;
+        vector<unsigned int> dest;
+        FILE *fp;
+        char str[256];
+        fp = fopen(filename.c_str(), "r");
+        if (fp == NULL){
+            exit(1);
         }
-        file.close();
-        //cout << count << endl;
-        //cout << " edge list read" << endl;
-        //cout << src.size() << " ";
-        //cout <<  src[0] << " " << src[10];
-
-/*
-
-        for(unsigned int i = 0; i < src.size(); i ++)
+        int total = 0;
+        while (fgets(str, 256, fp) != NULL )
         {
-            adj_list[src[i]].insert(dst[i]);
-            adj_list[dst[i]].insert(src[i]);
+            string str2(str);
+            istringstream str_stream(str2);
+            string number;
+            getline(str_stream, number, ' ');
+            unsigned int src_ = stol(number);
+            getline(str_stream, number, ' ');
+            unsigned int dst_ = stol(number);
+            source.push_back(src_);
+            dest.push_back(dst_);
+            total++;
         }
-*/
-        CSRgraph g(adj_list);
-        graph = g;
+        fclose(fp);
+
+        maxID =0;
+        for(unsigned int i = 0; i < source.size(); ++i) {
+            if(source[i] > maxID) maxID = source[i];
+            if(dest[i] > maxID) maxID = dest[i];
+        }
+        adj_list.clear();
+        adj_list.resize(maxID + 1);
+
+        for(unsigned int i = 0; i < source.size(); ++i) {
+            adj_list[source[i]].insert(dest[i]);
+            adj_list[dest[i]].insert(source[i]);
+        }
+
+
     }
 
     CSRgraph get_graph() const

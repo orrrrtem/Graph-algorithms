@@ -68,8 +68,6 @@ void count_sort(vector<pair <weight_type, pair<unsigned int,unsigned int> >> & w
         count[count_index]--;
     }
 
-
-//swap TODO
     weights_for_component.swap(output);
 }
 
@@ -88,7 +86,6 @@ void radixsort(vector<pair <weight_type, pair<unsigned int,unsigned int> >> & we
         max_hex_bit++;
         m_for_bits = m_for_bits >> radix_size;
     }
-    //TODO make exp 2^16 with >>
 
     for (unsigned int exp = 0; exp < max_hex_bit; exp++)
     {
@@ -113,14 +110,11 @@ void bucketSort(vector<pair <weight_type, pair<unsigned int,unsigned int> >> & w
     vector<vector<pair <weight_type, pair<unsigned int, unsigned int> > > > bucket(n) ;
     auto bucket_range = ((mx-mn) / n) + 1;
 
-
     for (unsigned int i=0; i < n; i++)
     {
         unsigned int bucket_index = (weights_for_component[i].first - mn) / bucket_range;
         bucket[bucket_index].push_back(weights_for_component[i]);
     }
-
-
 
     for(auto i = 0; i < bucket.size(); i++)
     {
@@ -131,8 +125,6 @@ void bucketSort(vector<pair <weight_type, pair<unsigned int,unsigned int> >> & w
     for (unsigned int i = 0; i < n; i++)
         for (unsigned int j = 0; j < bucket[i].size(); j++)
             weights_for_component[index++] = bucket[i][j];
-
-
 }
 
 

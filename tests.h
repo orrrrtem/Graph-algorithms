@@ -70,7 +70,7 @@ public:
         one_bridges = one_bridges_;
         verify_type = verify_type_;
 
-        cout << "check start";
+        //cout << "check start";
         switch(verify_type)
         {
             case two_bridge:
@@ -113,9 +113,6 @@ public:
 
             if(component_size_before_deleting == number_vertices_in_component)
             {
-                //cout << "first check" << endl;
-                //cout << component_size_before_deleting << " " << number_vertices_in_component << endl;
-                //cout << i.first.first << " " << i.first.second << " " << i.second.first << " " << i.second.second << endl;
                 miss_count++;
                 verified = false;
                 continue;
@@ -136,7 +133,6 @@ public:
 
         for(auto i: two_bridges)
         {
-            //cout << "check" << endl << endl;
             number_vertices_in_component = 0;
             deleted_edges.clear();
 
@@ -150,9 +146,6 @@ public:
 
             if(component_size_before_deleting != number_vertices_in_component) // one bridge
             {
-                //cout << "first check" << endl;
-                //cout << component_size_before_deleting << " " << number_vertices_in_component << endl;
-                //cout << i.first.first << " " << i.first.second << " " << i.second.first << " " << i.second.second << endl;
                 miss_count++;
                 verified = false;
                 continue;
@@ -170,7 +163,6 @@ public:
                 continue;
             }
 
-
             number_vertices_in_component = 0;
             deleted_edges.clear();
             deleted_edges.push_back(i.first);
@@ -180,18 +172,10 @@ public:
             if(component_size_before_deleting == number_vertices_in_component)
             {
                 miss_count++;
-                //cout << component_size_before_deleting << " \n";
-
-                //cout << i.first.first << "   " <<g->get_size_neighbors(i.first.first) << endl;
-                //cout << i.first.second << "   " <<g->get_size_neighbors(i.first.second) << endl;
-               // cout << i.second.first << "   " <<g->get_size_neighbors(i.second.first) << endl;
-                //cout << i.second.second << "   " <<g->get_size_neighbors(i.second.second) << endl;
-               // exit(1);
                 verified = false;
                 continue;
             }
         }
-
         precision = 1 - ((double)miss_count / (double)two_bridges.size());
 
     }
@@ -220,9 +204,6 @@ public:
             for (unsigned int i = 0; i < deleted_edges.size(); i++)
             {
                 if (make_pair(to, v) == deleted_edges[i] || make_pair(v, to) == deleted_edges[i]) {
-                    //cout << to <<  " " << v << " " << deleted_edges[i].first << " " << deleted_edges[i].second << endl;
-                    //cout << " deleted";
-                    //if (deleted_edges.size() == 2) cout << " deleted path" << endl;
                     is_deleted = true;
                     break;
                 }
@@ -263,7 +244,6 @@ public:
             if (is_deleted == true || this->visited[to] == true) {
                 continue;
             }
-            //cout << v << " " << to << endl;
             else {
                 randomized_dfs(to, v);
             }

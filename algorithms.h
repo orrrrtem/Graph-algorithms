@@ -12,7 +12,7 @@
 
 
 void print_bridge(int v, int to) {
-    cout << "Bridge: (" << v << "," << to << ")" << endl;
+    //cout << "Bridge: (" << v << "," << to << ")" << endl;
 }
 
 
@@ -26,12 +26,9 @@ class dfs_bridges {
     vector<pair<unsigned int, unsigned int>> one_bridges;
 
 
-
-
     void dfs(const CSRgraph &g, int v, int p = -1) {
         visited[v] = true;
         tin[v] = low[v] = timer++;
-        cout << timer << endl;
         pair<int, int> Nv = g.get_neighbors(v);
         for (int to_ = Nv.first; to_ < Nv.second; to_++)
             //for (int to : adj[v]) {
@@ -77,7 +74,7 @@ public:
     {
         //cout << "Searching bridges with dfs method started" << endl;
         find_bridges(g);
-        cout << " num_bridges " << bridges_counter << "\t";
+        //cout << " num_bridges " << bridges_counter << "\t";
     }
     dfs_bridges(){}
 };
@@ -205,10 +202,10 @@ public:
 
     randomized_bridges(const CSRgraph * g_)
     {
-        cout << "Randimized searching bridges with dfs method started" << endl;
+        //cout << "Randimized searching bridges with dfs method started" << endl;
         this->g = g_;
         find_bridges();
-        cout << " num_bridges " << this->bridges_counter << "\t";
+        //cout << " num_bridges " << this->bridges_counter << "\t";
     }
     randomized_bridges(){}
 
@@ -304,85 +301,12 @@ public:
 enum  sort_choice {std_sort, bucket_sort, radix_sort };
 
 
-
-
 template< class weight_type>
 class randomized_two_bridges: public randomized_init<weight_type>
         {
     vector<pair <weight_type, pair<unsigned int, unsigned int> >> weights_for_component;
     sort_choice sort_type;
     vector<pair<pair  <unsigned int, unsigned int>, pair  <unsigned int, unsigned int>>> two_bridges;
-/*
-    vector<bool> visited;
-
-
-    unsigned int bridges_counter = 0;
-    vector<weight_type> weights;
-    vector<bool> is_weight_set_;
-    const CSRgraph * g;
-
-    uniform_int_distribution<unsigned int> probability;
-
-
-
-
-    void set_weight_by_pos(unsigned int pos, weight_type weight)
-    {
-        weights[pos] = weight;
-        is_weight_set_[pos] = true;
-    }
-
-    void set_random_weight_by_pos(unsigned int pos)
-    {
-        //weights[pos] = (rand() % (numeric_limits<weight_type>::max() ));//deleted + 1
-        weights[pos] = probability(gen);
-        is_weight_set_[pos] = true;
-    }
-
-
-    void print_two_bridge(unsigned int i, unsigned int j) const
-    {
-        cout <<"("<< weights_for_component[i].second.first << ", " << weights_for_component[i].second.second <<")  "<<
-                "("<< weights_for_component[j].second.first << ", " << weights_for_component[j].second.second <<")"<<
-                endl;
-    }
-
-    void set_weight(unsigned int i, unsigned int j, weight_type weight)
-    {
-        auto neighbors_i = g->get_neighbors(i);
-
-        unsigned int pos_j = lower_bound(g->cols.begin() + neighbors_i.first, g->cols.begin() + neighbors_i.second, j) - g->cols.begin();
-        weights[pos_j] = weight;
-        is_weight_set_[pos_j] = true;
-        //linear version of searching
-
-//        for(auto k = neighbors_i.first; k < neighbors_i.second; k++) //TODO binary search
-//        {
-//            if(g->cols[k] == j)
-//            {
-//                weights[k] = weight;
-//                is_weight_set_[k] = true;
-//                break;
-//            }
-//        }
-
-    }
-
-    weight_type get_weight_by_pos(unsigned int pos) const
-    {
-        return weights[pos];
-    }
-
-
-    bool is_weight_set(const unsigned int pos) const
-    {
-        return is_weight_set_[pos];
-    }
-
-*/
-
-
-
 
     weight_type randomized_dfs( unsigned int v, unsigned int parent)
     {
@@ -477,14 +401,11 @@ class randomized_two_bridges: public randomized_init<weight_type>
             if( weights_for_component[i].first == weights_for_component[i+1].first)
             {
                 two_bridges.push_back(make_pair(weights_for_component[i].second,weights_for_component[i + 1].second));
-               // cout << weights_for_component[i].first << " ";
                 this->bridges_counter++;
                 for(auto j = i + 2; j < weights_for_component.size(); j++)
                 {
                     if( weights_for_component[i].first == weights_for_component[j+1].first)
                     {
-                        //print_two_bridge(i, j);
-                       // cout << weights_for_component[i].first << " ";
                         two_bridges.push_back(make_pair(weights_for_component[i].second,weights_for_component[j].second));
                         this->bridges_counter++;
                     }
@@ -493,18 +414,9 @@ class randomized_two_bridges: public randomized_init<weight_type>
                         break;
                     }
                 }
-               // cout << endl;
             }
-
         }
-
-
     }
-
-
-
-
-
 
 
 public:
@@ -514,12 +426,10 @@ public:
     }
     void find_bridges()
     {
-
         this->visited.assign(this->g->num_vert, false);
         this->weights.resize(this->g->num_edges);
         this->is_weight_set_.assign(this->g->num_edges, false);
         two_bridges.clear();
-
         for (int i = 0; i < this->g->num_vert; ++i)
         {
             if (!this->visited[i])
@@ -528,21 +438,16 @@ public:
                 randomized_dfs_init(i);
             }
         }
-
     }
 
 
     randomized_two_bridges(const CSRgraph * g_, sort_choice sort_type)
     {
-
         //cout << "Randimized searching two-bridges with dfs method started" << endl;
         this->g = g_;
-
         this->sort_type = sort_type;
-
         find_bridges();
         //cout << " num two-bridges " << this->bridges_counter << "\t";
-
     }
     randomized_two_bridges(){}
 };
