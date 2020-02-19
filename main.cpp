@@ -12,13 +12,13 @@ using namespace std;
 
 
 int main() {
-    /*
-    CSRgraph g_inner = create_graph(10000, 0.04);
+
+    CSRgraph g_inner = create_graph(100, 0.04);
 
     cout << "|V| = " << g_inner.get_num_vert() << "\t |E| = " << g_inner.get_num_edges() << endl;
 
     auto t1 = std::chrono::high_resolution_clock::now();
-    randomized_two_bridges<unsigned long long> s1(&g_inner,std_sort);
+    randomized_two_bridges<int64_t> s1(&g_inner,std_sort);
     auto t2 = std::chrono::high_resolution_clock::now();
     std::cout << "Std sort:n = " << 10000 << ";\tp = " << 0.005 << "\ttime: "
               << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count()
@@ -26,6 +26,7 @@ int main() {
     verifier test1(&g_inner,s1.get_answer(), two_bridge);
     cout << "Precision is: " << test1.get_precision() <<"\t num missings" << test1.get_miss_count() << endl;
 
+/*
 
     t1 = std::chrono::high_resolution_clock::now();
     randomized_two_bridges<unsigned long long> solution3(&g_inner,bucket_sort);
@@ -50,7 +51,7 @@ int main() {
     cout << endl;
 
 */
-
+/*
     real_graph_becnhmark<uint64_t>("/Users/artemaroslankin/Downloads/soc-loc-brightkite.edges");
     real_graph_becnhmark<uint64_t>("/Users/artemaroslankin/Downloads/web-NotreDame.edges");
 
@@ -59,9 +60,9 @@ int main() {
     real_graph_becnhmark<uint64_t>("/Users/artemaroslankin/Downloads/cit-DBLP.edges");
     real_graph_becnhmark<uint64_t>("/Users/artemaroslankin/Downloads/road-luxembourg-osm.mtx");
 
+*/
 
-
-
+/*
     reader USA("/Users/artemaroslankin/Downloads/cit-DBLP.edges");
 
 
@@ -110,6 +111,6 @@ int main() {
 
     //randomized_two_bridges_combo<uint64_t>();
 
-
+*/
     return 0;
 }
