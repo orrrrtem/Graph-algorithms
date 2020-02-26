@@ -23,7 +23,7 @@ class dfs_bridges {
     vector<int> tin, low;
     int timer;
     int bridges_counter = 0;
-    vector<pair<unsigned int, unsigned int>> one_bridges;
+    vector<edge> one_bridges;
 
 
     void dfs(const CSRgraph &g, int v, int p = -1) {
@@ -42,8 +42,8 @@ class dfs_bridges {
                 low[v] = min(low[v], low[to]);
                 if (low[to] > tin[v])
                 {
-                    //print_bridge(v, to);
-                    one_bridges.push_back(make_pair(v, to));
+                    edge new_bridge = {unsigned(v), unsigned(to)};
+                    one_bridges.push_back(new_bridge);
                     bridges_counter++;
                 }
 
@@ -51,7 +51,7 @@ class dfs_bridges {
         }
     }
 public:
-    vector<pair<unsigned int, unsigned int>> get_answer() const
+    vector<edge> get_answer() const
     {
         return one_bridges;
     }
@@ -151,7 +151,7 @@ public:
 template< class weight_type>
 class randomized_bridges : public randomized_init<weight_type>
         {
-    vector<pair<unsigned int, unsigned int>> one_bridges;
+    vector<edge> one_bridges;
 public:
 /*
     vector<bool> visited;
@@ -237,7 +237,8 @@ public:
         if(sum == 0)
         {
             //print_bridge(v,parent);
-            one_bridges.push_back(make_pair(v,parent));
+            edge new_bridge = {v, parent};
+            one_bridges.push_back(new_bridge);
             this->bridges_counter++;
         }
         return sum;
@@ -287,7 +288,7 @@ public:
 
     }
 
-    vector<pair<unsigned int, unsigned int>> get_answer() const
+    edge get_answer() const
     {
         return one_bridges;
     }
@@ -304,9 +305,9 @@ enum  sort_choice {std_sort, bucket_sort, radix_sort };
 template< class weight_type>
 class randomized_two_bridges: public randomized_init<weight_type>
         {
-    vector<pair <weight_type, pair<unsigned int, unsigned int> >> weights_for_component;
+    vector<weight_edge<weight_type>> weights_for_component;
     sort_choice sort_type;
-    vector<pair<pair  <unsigned int, unsigned int>, pair  <unsigned int, unsigned int>>> two_bridges;
+    vector<pair<edge, edge>> two_bridges;
 
     weight_type randomized_dfs( unsigned int v, unsigned int parent)
     {
@@ -330,7 +331,8 @@ class randomized_two_bridges: public randomized_init<weight_type>
                     this->set_weight(to, v, this->get_weight_by_pos(to_));
                     if(sum != 0)
                     {
-                        weights_for_component.push_back(std::make_pair(this->get_weight_by_pos(to_), std::make_pair(to, v)));
+                        weight_edge<weight_type> new_weight_edge = {to, v, this->get_weight_by_pos(to_)};
+                        weights_for_component.push_back(new_weight_edge);
                     }
                 }
 
@@ -340,7 +342,8 @@ class randomized_two_bridges: public randomized_init<weight_type>
 
         if(sum!=0)
         {
-            weights_for_component.push_back(std::make_pair(sum, std::make_pair(parent, v)));
+            weight_edge<weight_type> new_weight_edge = {parent, v, sum};
+            weights_for_component.push_back(new_weight_edge);
         }
         return sum;
     }
@@ -398,15 +401,19 @@ class randomized_two_bridges: public randomized_init<weight_type>
 
         for(auto i = 0; i + 1 < weights_for_component.size(); i++)
         {
-            if( weights_for_component[i].first == weights_for_component[i+1].first)
+            if( weights_for_component[i].weight == weights_for_component[i+1].weight)
             {
-                two_bridges.push_back(make_pair(weights_for_component[i].second,weights_for_component[i + 1].second));
+                edge first = {weights_for_component[i].start_ver, weights_for_component[i].end_ver};
+                edge second = {weights_for_component[i + 1].start_ver, weights_for_component[i + 1].end_ver};
+                two_bridges.push_back(make_pair(first, second));
                 this->bridges_counter++;
                 for(auto j = i + 2; j < weights_for_component.size(); j++)
                 {
-                    if( weights_for_component[i].first == weights_for_component[j+1].first)
+                    if( weights_for_component[i].weight == weights_for_component[j+1].weight)
                     {
-                        two_bridges.push_back(make_pair(weights_for_component[i].second,weights_for_component[j].second));
+                        edge first = {weights_for_component[i].start_ver, weights_for_component[i].end_ver};
+                        edge second = {weights_for_component[j].start_ver, weights_for_component[j].end_ver};
+                        two_bridges.push_back(make_pair(first, second));
                         this->bridges_counter++;
                     }
                     else
@@ -421,7 +428,8 @@ class randomized_two_bridges: public randomized_init<weight_type>
 
 public:
 
-    vector<pair<pair  <unsigned int, unsigned int>, pair  <unsigned int, unsigned int>>> get_answer() const {
+    vector<pair<edge, edge>> get_answer() const
+    {
         return two_bridges;
     }
     void find_bridges()

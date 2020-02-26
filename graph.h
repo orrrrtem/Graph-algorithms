@@ -18,6 +18,43 @@ using namespace std;
 static std::random_device rd;
 static std::mt19937 gen(rd());
 
+struct edge
+{
+    unsigned int start_ver = 0;
+    unsigned int end_ver = 0;
+};
+
+bool operator == (const edge& one, const edge& two)
+{
+    if ((one.start_ver == two.start_ver) && (one.end_ver == two.end_ver))
+        return true;
+    else
+        return false;
+}
+
+edge create_edge(unsigned int start_ver_, unsigned int end_ver_)
+{
+    edge new_edge = {start_ver_, end_ver_};
+    return new_edge;
+}
+
+template<typename weight_type>
+struct weight_edge
+{
+    unsigned int start_ver = 0;
+    unsigned int end_ver = 0;
+    weight_type weight = 0;
+};
+
+template<typename weight_type>
+bool operator < (const weight_edge<weight_type>& one, const weight_edge<weight_type>& two)
+{
+    if (one.weight < two.weight)
+        return true;
+    else
+        return false;
+}
+
 class CSRgraph
 {
 public:
