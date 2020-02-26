@@ -288,7 +288,7 @@ public:
 
     }
 
-    edge get_answer() const
+    vector<edge> get_answer() const
     {
         return one_bridges;
     }

@@ -326,7 +326,7 @@ void real_graph_becnhmark(const string& file_path) {
 
     //verifier test1(&g,solution1.get_answer(), one_bridge);
     //cout << "one_bridge precision is: " << test1.get_precision() <<"\t num missings" << test1.get_miss_count() << endl;
-
+    cout << "number of one bridges: " <<solution1.get_answer().size() << endl;
 
     time.Start();
     randomized_two_bridges<type> solution2(&g,std_sort);
@@ -334,7 +334,7 @@ void real_graph_becnhmark(const string& file_path) {
     std::cout << "randomized two bridges with std sort\t "
               << time.Seconds()
               << " seconds\n";
-
+    cout << "number of two bridges: " <<solution2.get_answer().size() << endl;
     //verifier test2(&g,solution2.get_answer(), two_bridge);
     //cout << "precision is: " << test2.get_precision() <<"\t num missings" << test2.get_miss_count() << endl;
 

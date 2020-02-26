@@ -51,7 +51,7 @@ int main() {
     cout << endl;
 
 */
-/*
+
     real_graph_becnhmark<uint64_t>("/Users/artemaroslankin/Downloads/soc-loc-brightkite.edges");
     real_graph_becnhmark<uint64_t>("/Users/artemaroslankin/Downloads/web-NotreDame.edges");
 
@@ -60,7 +60,7 @@ int main() {
     real_graph_becnhmark<uint64_t>("/Users/artemaroslankin/Downloads/cit-DBLP.edges");
     real_graph_becnhmark<uint64_t>("/Users/artemaroslankin/Downloads/road-luxembourg-osm.mtx");
 
-*/
+
 
 /*
     reader USA("/Users/artemaroslankin/Downloads/cit-DBLP.edges");
