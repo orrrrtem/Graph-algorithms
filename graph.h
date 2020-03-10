@@ -63,6 +63,7 @@ public:
 
     vector<unsigned int> rows;
     vector<unsigned int> cols;
+    vector<unsigned int> weight;
 
 
     CSRgraph(){}
