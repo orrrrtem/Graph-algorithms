@@ -1,6 +1,7 @@
 #include <iostream>
 #include <unistd.h>
 #include "graph.h"
+#include "johnson.h"
 #include "algorithms.h"
 #include "benchmark.h"
 #include "reader.h"
@@ -12,11 +13,34 @@ using namespace std;
 
 
 int main() {
+/*
+    vector<vector<pair<int, int> > >  edges(5);
+    edges[0].push_back(make_pair(1, -1));
+    edges[0].push_back(make_pair(2, 4));
+    edges[1].push_back(make_pair(2, 3));
+    edges[1].push_back(make_pair(3, 2));
+    edges[1].push_back(make_pair( 4, 2));
+    edges[3].push_back(make_pair(2, 5));
+    edges[3].push_back(make_pair(1, 1));
+    edges[4].push_back(make_pair( 3, -3));
+    int num_nodes = 5;
+    int num_edges = 8;
+*/
+    vector<vector<pair<int, int> > >  edges(4);
+    edges[0].push_back(make_pair(1, -5));
+    edges[0].push_back(make_pair(2, 2));
+    edges[0].push_back(make_pair(3, 3));
+    edges[1].push_back(make_pair(2, 4));
+    edges[2].push_back(make_pair( 3, 1));
 
-    CSRgraph g_inner = create_graph(100, 0.04);
+    int num_nodes = 4;
+    int num_edges = 5;
+    vector<int> dist1, dist2;
+    Johnson first(edges, num_nodes, num_edges);
 
-    cout << "|V| = " << g_inner.get_num_vert() << "\t |E| = " << g_inner.get_num_edges() << endl;
-
+    first.do_johnson();
+    first.print_results();
+/*
     auto t1 = std::chrono::high_resolution_clock::now();
     randomized_two_bridges<int64_t> s1(&g_inner,std_sort);
     auto t2 = std::chrono::high_resolution_clock::now();
@@ -25,7 +49,7 @@ int main() {
               << " microseconds\n";
     verifier test1(&g_inner,s1.get_answer(), two_bridge);
     cout << "Precision is: " << test1.get_precision() <<"\t num missings" << test1.get_miss_count() << endl;
-
+*/
 /*
 
     t1 = std::chrono::high_resolution_clock::now();
@@ -51,7 +75,7 @@ int main() {
     cout << endl;
 
 */
-
+/*
     real_graph_becnhmark<uint64_t>("/Users/artemaroslankin/Downloads/soc-loc-brightkite.edges");
     real_graph_becnhmark<uint64_t>("/Users/artemaroslankin/Downloads/web-NotreDame.edges");
 
@@ -60,7 +84,7 @@ int main() {
     real_graph_becnhmark<uint64_t>("/Users/artemaroslankin/Downloads/cit-DBLP.edges");
     real_graph_becnhmark<uint64_t>("/Users/artemaroslankin/Downloads/road-luxembourg-osm.mtx");
 
-
+*/
 
 /*
     reader USA("/Users/artemaroslankin/Downloads/cit-DBLP.edges");
@@ -112,5 +136,6 @@ int main() {
     //randomized_two_bridges_combo<uint64_t>();
 
 */
+
     return 0;
 }
