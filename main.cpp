@@ -6,6 +6,7 @@
 #include "benchmark.h"
 #include "reader.h"
 #include <sstream>
+#include "FL_SSSP.h"
 
 //#include "sorts.h"
 
@@ -41,6 +42,32 @@ int main() {
     first.do_johnson();
     first.print_results();
 /*
+
+    vector<vector<unsigned int>> adj(10);
+    for(int i = 0; i < 10; i++) {
+        adj[i] = vector<unsigned int>(10);
+    }
+    for(int i = 0; i < 10; i++) {
+        for(int j = 0; j < 10; j++) {
+            if ((i+j) % 2 == 0)
+                adj[i][j] = 1;
+            else
+                adj[i][j] = 0;
+            if( i == j) {
+                adj[i][j] = 0;
+            }
+        }
+    }
+    sssp_floid sd(adj);
+    sd.print_result();
+
+
+
+    /*
+    CSRgraph g_inner = create_graph(100, 0.04);
+
+    cout << "|V| = " << g_inner.get_num_vert() << "\t |E| = " << g_inner.get_num_edges() << endl;
+
     auto t1 = std::chrono::high_resolution_clock::now();
     randomized_two_bridges<int64_t> s1(&g_inner,std_sort);
     auto t2 = std::chrono::high_resolution_clock::now();
@@ -74,8 +101,6 @@ int main() {
     cout << "Precision is: " << test2.get_precision() <<"\t num missings" << test2.get_miss_count() << endl;
     cout << endl;
 
-*/
-/*
     real_graph_becnhmark<uint64_t>("/Users/artemaroslankin/Downloads/soc-loc-brightkite.edges");
     real_graph_becnhmark<uint64_t>("/Users/artemaroslankin/Downloads/web-NotreDame.edges");
 
@@ -84,9 +109,9 @@ int main() {
     real_graph_becnhmark<uint64_t>("/Users/artemaroslankin/Downloads/cit-DBLP.edges");
     real_graph_becnhmark<uint64_t>("/Users/artemaroslankin/Downloads/road-luxembourg-osm.mtx");
 
-*/
 
-/*
+
+
     reader USA("/Users/artemaroslankin/Downloads/cit-DBLP.edges");
 
 
