@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include "graph.h"
 #include "algorithms.h"
+#include "FL_SSSP.h"
 #include "tests.h"
 #include "reader.h"
 #include <fstream>
@@ -298,7 +299,7 @@ void randomized_two_bridges_combo() {
 
 
 template<class type>
-void real_graph_becnhmark(const string& file_path) {
+void real_graph_becnhmark_bridges(const string& file_path) {
     cout << "Real graph measure started" << endl;
     Timer time;
     time.Start();
@@ -359,6 +360,41 @@ void real_graph_becnhmark(const string& file_path) {
     //verifier test4(&g,solution4.get_answer(), two_bridge);
     //cout << " precision is: " << test4.get_precision() <<"\t num missings" << test4.get_miss_count() << endl;
 
+}
+
+
+
+
+template<class weight_type>
+void real_graph_becnhmark_shortest_paths(const string& file_path, bool to_display = false) {
+    cout << "Real graph measure started" << endl;
+    Timer time;
+    time.Start();
+    reader graph(file_path,true);
+    time.Stop();
+    std::cout << "read in\t "
+              << time.Seconds()
+              << " seconds from " <<file_path <<"\n";
+
+    time.Start();
+    vector<vector<weight_type>> g = adjacency_from_COO(graph.source, graph.dest, graph.weights);
+    time.Stop();
+    std::cout << "Adj matrix build took\t "
+              << time.Seconds()
+              << " seconds\n";
+
+    cout << "|V|=" << g.size() << endl;
+
+    time.Start();
+    apsp_floid<weight_type, unsigned int> sd(g);
+    time.Stop();
+    std::cout << "APSP:\t "
+              << time.Seconds()
+              << " seconds\n";
+
+    if (to_display == true) {
+        sd.print_result();
+    }
 }
 
 

@@ -43,6 +43,8 @@ int main() {
     first.print_results();
 /*
 
+
+    /*
     vector<vector<unsigned int>> adj(10);
     for(int i = 0; i < 10; i++) {
         adj[i] = vector<unsigned int>(10);
@@ -58,10 +60,26 @@ int main() {
             }
         }
     }
-    sssp_floid sd(adj);
+    */
+
+//    vector<unsigned int> s_v = {0,1,2};
+//    vector<unsigned int> d_v = {1, 2, 0};
+//    vector<float> weights = {1,2,1};
+
+    vector<unsigned int> s_v;
+    vector<unsigned int> d_v;
+    vector<float> weights;
+
+    string line;
+    ifstream myfile("/Users/artemaroslankin/Downloads/inf-USAir97.mtx");
+    auto adj = adjacency_from_COO(s_v, d_v, weights);
+    s_v.push_back(0);
+    d_v.push_back(1);
+    apsp_floid sd(adj);
     sd.print_result();
 
-
+    real_graph_becnhmark_shortest_paths<float>("/Users/artemaroslankin/Downloads/inf-USAir97.mtx");  //18 seconds
+    //real_graph_becnhmark_shortest_paths<float>("/Users/artemaroslankin/Downloads/inf-USAir97.mtx", true);
 
     /*
     CSRgraph g_inner = create_graph(100, 0.04);

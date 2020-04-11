@@ -9,7 +9,29 @@
 #include <limits.h>
 #include "graph.h"
 
-template <class weight_type = unsigned int, class node_type = unsigned int>
+
+
+template<class weight_type = float>
+vector<vector<weight_type>> adjacency_from_COO(const vector<unsigned int>& source_vertices, const vector<unsigned int>& destination_vertices,const vector<weight_type> & weights ) {
+    if(source_vertices.size() != destination_vertices.size() || source_vertices.size() != weights.size()) {
+        vector<vector<weight_type >> empty;
+        return empty;
+    }
+    vector<vector<weight_type >> adj(source_vertices.size());
+    for(size_t i = 0; i < source_vertices.size(); ++i) {
+        adj[i] = vector<weight_type >(source_vertices.size(),0);
+    }
+    for( size_t i = 0; i < source_vertices.size(); ++i) {
+        adj[source_vertices[i]][destination_vertices[i]] = weights[i];
+        adj[destination_vertices[i]][source_vertices[i]] = weights[i];
+    }
+    return adj;
+}
+
+
+
+
+template <class weight_type = float, class node_type = unsigned int>
 struct pair_distance_path
 {
     weight_type distance;
@@ -36,19 +58,18 @@ struct pair_distance_path
 unsigned int max_weight = 100000;
 
 
-template<class weight_type = unsigned int, class node_type = unsigned int>
-class sssp_floid
+template<class weight_type = float, class node_type = unsigned int>
+class apsp_floid
 {
 private:
     vector<vector< weight_type > >  sssp_map;
     vector<vector< vector<node_type> > >  shortest_paths;
-    vector<vector<node_type>> * adj_map;
     node_type nodes_number = 0;
 
 public:
-    sssp_floid() = default;
+    apsp_floid() = default;
 
-    sssp_floid(vector<vector<node_type>>& adj_map) {
+    apsp_floid(const vector<vector<weight_type>>& adj_map) {
         nodes_number = adj_map.size();
         sssp_map.resize(nodes_number);
         shortest_paths.resize(nodes_number);
@@ -68,9 +89,9 @@ public:
         for (node_type k = 0; k < nodes_number; ++k) {
             for (node_type i = 0; i < nodes_number; ++i) {
                 for (node_type j = 0; j < nodes_number; ++j) {
-                    weight_type possible_new_weigth = sssp_map[i][k] + sssp_map[k][j];
-                    if(possible_new_weigth < sssp_map[i][j]) {
-                        sssp_map[i][j] = possible_new_weigth;
+                    weight_type possible_new_weight = sssp_map[i][k] + sssp_map[k][j];
+                    if(possible_new_weight < sssp_map[i][j]) {
+                        sssp_map[i][j] = possible_new_weight;
                         shortest_paths[i][j] = shortest_paths[i][k];
                         for(auto m = 0; m < shortest_paths[k][j].size(); m++) {
                             shortest_paths[i][j].push_back(shortest_paths[k][j][m]);
@@ -95,6 +116,7 @@ public:
         }
     }
 };
+
 
 
 #endif //BRIDGES_FL_SSSP_H
