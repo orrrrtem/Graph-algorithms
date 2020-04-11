@@ -12,7 +12,7 @@ private:
     int inf = 0;
 public:
     Johnson(vector<vector<pair<int, int> > > edges_, unsigned int nodes_number_, unsigned int edges_number_ );
-    void do_johnson();
+    bool do_johnson();
     bool bellman_ford(int ver, vector<int>& dist, const vector<vector<pair<int, int> > >& graph_edges,unsigned int nodes_num);
     void dijkstra(int ver, vector<int>& dist, const vector<vector<pair<int, int> > >& graph_edges, vector< vector<int> >& path);
     vector<vector<int>> get_modified_distance_map() const
@@ -37,7 +37,7 @@ Johnson::Johnson(vector<vector<pair<int, int> > > edges_, unsigned int nodes_num
     inf = std::numeric_limits<int>::max();
 }
 
-void Johnson::do_johnson()
+bool Johnson::do_johnson()
 {
     vector<vector<pair<int, int> > > new_edges = edges;
     new_edges.resize(nodes_number + 1);
@@ -47,21 +47,20 @@ void Johnson::do_johnson()
     if(! bellman_ford(nodes_number, h, new_edges, (nodes_number + 1) ))
     {
         cout << "there is negative cycle" << endl;
-        return;
+        return false;
     }
     vector<vector<pair<int, int> > > modified_edges = edges;
     for(unsigned int i = 0; i < modified_edges.size() ; ++i)
         for(unsigned int j = 0; j < modified_edges[i].size(); ++j)
         {
             modified_edges[i][j].second = modified_edges[i][j].second + h[i] - h[modified_edges[i][j].first];
-            cout << "new weights " << modified_edges[i][j].second << endl;
         }
     modified_distance_map.resize(nodes_number);
     for(unsigned int i = 0; i < nodes_number; i++)
     {
         dijkstra(i, modified_distance_map[i], modified_edges, shortest_paths[i]);
     }
-
+    return true;
 
 
 }
@@ -126,12 +125,12 @@ bool Johnson::bellman_ford(int ver, vector<int>& dist, const vector<vector<pair<
     dist.assign(nodes_num, inf);
     dist[ver] = 0;
     int x;
-
-    for(unsigned int k = 0; k < nodes_num; ++k)
+//extra iteration for negative cycle check
+    for(unsigned int k = 0; k < nodes_num ; ++k)
     {
-        for (unsigned int i = 0; i < graph_edges.size(); ++i)
+        x = -1;
+        for (unsigned int i = 0; i < nodes_num; ++i)
         {
-            x = -1;
             for (unsigned j = 0; j < graph_edges[i].size(); ++j)
             {
                 if((dist[graph_edges[i][j].first] < inf) || (i == ver))
@@ -144,7 +143,9 @@ bool Johnson::bellman_ford(int ver, vector<int>& dist, const vector<vector<pair<
                 }
             }
 
+
         }
+
     }
 
     if (x == -1)
@@ -170,11 +171,12 @@ void Johnson::get_real_distance_map()
                     break;
                 }
                 else {
-                    for(int m = 0; m < edges[shortest_paths[i][j][k]].size(); m++)
+                    for(int m = 0; m < edges[shortest_paths[i][j][k]].size() ; m++)
                     {
-                        if(edges[shortest_paths[i][j][k]][m].first == k + 1)
-                           real_distance_map[i][j] += edges[shortest_paths[i][j][k]][m].second;
+                        if (edges[shortest_paths[i][j][k]][m].first == shortest_paths[i][j][k + 1])
+                            real_distance_map[i][j] += edges[shortest_paths[i][j][k]][m].second;
                     }
+                    cout << endl;
                 }
             }
         }

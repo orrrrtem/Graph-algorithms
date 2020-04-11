@@ -18,6 +18,8 @@ using namespace std;
 static std::random_device rd;
 static std::mt19937 gen(rd());
 
+
+
 struct edge
 {
     unsigned int start_ver = 0;
@@ -55,6 +57,71 @@ bool operator < (const weight_edge<weight_type>& one, const weight_edge<weight_t
         return false;
 }
 
+class Adj_list
+{
+private:
+    vector<vector<pair<int, int> > >  adj_list;
+    unsigned int num_edges = 0;
+    bool check_connection(unsigned int start_ver, unsigned int end_ver)
+    {
+        if(!adj_list[start_ver].empty())
+        {
+            for(unsigned int i = 0; i < adj_list[start_ver].size(); i++)
+            {
+                if(adj_list[start_ver][i].first == end_ver)
+                    return true;
+            }
+        }
+        else
+            return false;
+        return false;
+    }
+
+public:
+    vector<vector<pair<int, int> > > get_adj_list() const
+    {
+        return adj_list;
+    }
+    unsigned int get_num_edges() const
+    {
+        return num_edges;
+    }
+    void print_adj_list() const
+    {
+        for(unsigned int i = 0 ; i < adj_list.size(); i++)
+        {
+            for(unsigned int j = 0; j < adj_list[i].size(); j++)
+                cout << i << " " << adj_list[i][j].first << " weight: " << adj_list[i][j].second << endl;
+        }
+    }
+    vector<vector<pair<int, int> > > create_graph(unsigned int n, double p_in)
+    {
+        if(n < 0)
+            exit(-1);
+        if(p_in < 0 || p_in > 1)
+            exit(-1);
+        adj_list.resize(n);
+
+        //random_device generator;
+        bernoulli_distribution pd(p_in);
+        for(unsigned int i = 0; i < n; i++)
+        {
+            for (unsigned int j = 0; j < n; j++)
+            {
+                if(i == j)
+                    continue;
+                if (pd(gen) && (!check_connection(j, i)))
+                {
+                    adj_list[i].push_back(make_pair(j, ((gen() % 100))));
+                    num_edges++;
+                }
+            }
+        }
+
+        return adj_list;
+
+    }
+};
 class CSRgraph
 {
 public:

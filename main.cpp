@@ -1,9 +1,10 @@
 #include <iostream>
-#include <unistd.h>
+//#include <unistd.h>
 #include "graph.h"
 #include "johnson.h"
 #include "algorithms.h"
 #include "benchmark.h"
+#include "benchmark_shortest_paths.h"
 #include "reader.h"
 #include <sstream>
 #include "FL_SSSP.h"
@@ -16,31 +17,35 @@ using namespace std;
 int main() {
 /*
     vector<vector<pair<int, int> > >  edges(5);
-    edges[0].push_back(make_pair(1, -1));
-    edges[0].push_back(make_pair(2, 4));
-    edges[1].push_back(make_pair(2, 3));
-    edges[1].push_back(make_pair(3, 2));
-    edges[1].push_back(make_pair( 4, 2));
-    edges[3].push_back(make_pair(2, 5));
-    edges[3].push_back(make_pair(1, 1));
-    edges[4].push_back(make_pair( 3, -3));
+    edges[0].push_back(make_pair(1, 6));
+    edges[0].push_back(make_pair(3, 7));
+    edges[1].push_back(make_pair(2, 5));
+    edges[1].push_back(make_pair(3, -8));
+    edges[1].push_back(make_pair( 4, -4));
+    edges[2].push_back(make_pair(1, -2));
+    edges[3].push_back(make_pair(2, -3));
+    edges[3].push_back(make_pair( 4, 4));
+    edges[4].push_back(make_pair( 0, 2));
+    edges[4].push_back(make_pair( 2, 7));
     int num_nodes = 5;
-    int num_edges = 8;
+    int num_edges = 10;
 */
-    vector<vector<pair<int, int> > >  edges(4);
-    edges[0].push_back(make_pair(1, -5));
-    edges[0].push_back(make_pair(2, 2));
-    edges[0].push_back(make_pair(3, 3));
-    edges[1].push_back(make_pair(2, 4));
-    edges[2].push_back(make_pair( 3, 1));
 
-    int num_nodes = 4;
-    int num_edges = 5;
+/*
+    Adj_list adj_list;
+    unsigned int num_nodes = 4;
+    vector<vector<pair<int, int> > >  edges = adj_list.create_graph(num_nodes, 0.5);
+    adj_list.print_adj_list();
+    unsigned int num_edges = adj_list.get_num_edges();
+
     vector<int> dist1, dist2;
     Johnson first(edges, num_nodes, num_edges);
 
-    first.do_johnson();
-    first.print_results();
+    if(first.do_johnson())
+        first.print_results();
+*/
+
+    shortest_paths_combo();
 /*
 
     vector<vector<unsigned int>> adj(10);
