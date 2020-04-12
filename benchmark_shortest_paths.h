@@ -38,7 +38,7 @@ void shortest_paths_combo()
 
     std::ofstream myfile;
     myfile.open ("C:\\Users\\psmolnik\\Desktop\\johnson.xls");
-    for(int i = 0; i < results.size(); i++)
+    for(unsigned int i = 0; i < results.size(); i++)
         myfile << results[i].first << " " << results[i].second << "\n";
 }
 

@@ -1,4 +1,5 @@
 #include "graph.h"
+#include <queue>
 
 class Johnson
 {
@@ -10,11 +11,13 @@ private:
     unsigned int nodes_number = 0;
     unsigned int edges_number = 0;
     int inf = 0;
+    int calculateH(int vertex);
 public:
     Johnson(vector<vector<pair<int, int> > > edges_, unsigned int nodes_number_, unsigned int edges_number_ );
     bool do_johnson();
     bool bellman_ford(int ver, vector<int>& dist, const vector<vector<pair<int, int> > >& graph_edges,unsigned int nodes_num);
     void dijkstra(int ver, vector<int>& dist, const vector<vector<pair<int, int> > >& graph_edges, vector< vector<int> >& path);
+    void a_star(int start_ver, int end_ver, const vector<vector<pair<int, int> > >& graph_edges);
     vector<vector<int>> get_modified_distance_map() const
     {
         return modified_distance_map;
@@ -35,6 +38,50 @@ Johnson::Johnson(vector<vector<pair<int, int> > > edges_, unsigned int nodes_num
     edges_number = edges_number_;
     shortest_paths.resize(nodes_number);
     inf = std::numeric_limits<int>::max();
+}
+
+void Johnson::a_star(int start_ver, int end_ver, const vector<vector<pair<int, int> > >& graph_edges)
+{
+    vector<int> dist;
+    dist.resize(nodes_number);
+    dist.assign(nodes_number, inf);
+    dist[start_ver] = 0;
+    vector<bool> visit (nodes_number, false);
+    vector<int> p;
+    auto comparator = [&](int a_ver, int b_ver){return (dist[a_ver] + calculateH(a_ver)) < (dist[b_ver] + calculateH(b_ver));};
+    std::priority_queue<int, vector<int>, decltype(comparator)> ver_queue(comparator);
+    ver_queue.push(start_ver);
+    while(!ver_queue.empty())
+    {
+        int ver_for_visit = ver_queue.top();
+        ver_queue.pop();
+        p.push_back(ver_for_visit) ;
+        if(ver_for_visit == end_ver)
+        {
+            break;
+        }
+
+        for(unsigned int j = 0; j < graph_edges[ver_for_visit].size(); ++j)
+        {
+            int next_ver = graph_edges[ver_for_visit][j].first;
+            int weight = graph_edges[ver_for_visit][j].second;
+            if ((dist[ver_for_visit] + weight)  < dist[next_ver])
+            {
+                dist[next_ver] = dist[ver_for_visit] + weight;
+                ver_queue.push((next_ver));
+            }
+        }
+        visit[ver_for_visit] = true;
+    }
+    cout << dist[end_ver] << endl;
+    for(unsigned int i = 0; i < p.size(); i++)
+        cout << p[i] << " ";
+    cout << endl;
+}
+
+int Johnson::calculateH(int vertex)
+{
+    return 1;
 }
 
 bool Johnson::do_johnson()
@@ -99,9 +146,7 @@ void Johnson::dijkstra(int ver, vector<int>& dist,  const vector<vector<pair<int
 
     }
 
-
-
-    for(int i = 0; i < p.size(); i++)
+    for(unsigned int i = 0; i < p.size(); i++)
     {
         int j = i;
         while(1)
@@ -171,7 +216,7 @@ void Johnson::get_real_distance_map()
                     break;
                 }
                 else {
-                    for(int m = 0; m < edges[shortest_paths[i][j][k]].size() ; m++)
+                    for(unsigned int m = 0; m < edges[shortest_paths[i][j][k]].size() ; m++)
                     {
                         if (edges[shortest_paths[i][j][k]][m].first == shortest_paths[i][j][k + 1])
                             real_distance_map[i][j] += edges[shortest_paths[i][j][k]][m].second;

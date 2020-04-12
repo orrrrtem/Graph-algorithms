@@ -1,5 +1,5 @@
 #include <iostream>
-//#include <unistd.h>
+#include <unistd.h>
 #include "graph.h"
 #include "johnson.h"
 #include "algorithms.h"
@@ -31,7 +31,7 @@ int main() {
     int num_edges = 10;
 */
 
-/*
+
     Adj_list adj_list;
     unsigned int num_nodes = 4;
     vector<vector<pair<int, int> > >  edges = adj_list.create_graph(num_nodes, 0.5);
@@ -41,11 +41,11 @@ int main() {
     vector<int> dist1, dist2;
     Johnson first(edges, num_nodes, num_edges);
 
-    if(first.do_johnson())
-        first.print_results();
-*/
+    first.a_star(0, 3, edges);
 
-    shortest_paths_combo();
+
+
+    //shortest_paths_combo();
 /*
 
     vector<vector<unsigned int>> adj(10);
