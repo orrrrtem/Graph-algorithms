@@ -1,13 +1,15 @@
 #include <iostream>
-#include <unistd.h>
+//#include <unistd.h>
 #include "graph.h"
 #include "johnson.h"
+#include "a_star.h"
 #include "algorithms.h"
 #include "benchmark.h"
 #include "benchmark_shortest_paths.h"
 #include "reader.h"
 #include <sstream>
 #include "FL_SSSP.h"
+#include "tests_shortest_paths.h"
 
 //#include "sorts.h"
 
@@ -31,19 +33,19 @@ int main() {
     int num_edges = 10;
 */
 
-
     Adj_list adj_list;
-    unsigned int num_nodes = 4;
+    unsigned int num_nodes = 10;
     vector<vector<pair<int, int> > >  edges = adj_list.create_graph(num_nodes, 0.5);
     adj_list.print_adj_list();
     unsigned int num_edges = adj_list.get_num_edges();
 
     vector<int> dist1, dist2;
     Johnson first(edges, num_nodes, num_edges);
-
-    first.a_star(0, 3, edges);
-
-
+    A_star second(edges, num_nodes, num_edges);
+    vector<int> path;
+    second.do_a_star(2, 0, edges, path);
+    first.do_johnson();
+    first.print_results();
 
     //shortest_paths_combo();
 /*

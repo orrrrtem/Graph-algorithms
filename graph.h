@@ -12,14 +12,17 @@
 #include <random>
 #include <chrono>
 #include <set>
-
+#include <math.h>
 using namespace std;
 
 static std::random_device rd;
 static std::mt19937 gen(rd());
 
-
-
+struct coord
+{
+    int x;
+    int y;
+};
 struct edge
 {
     unsigned int start_ver = 0;
@@ -120,6 +123,36 @@ public:
 
         return adj_list;
 
+    }
+
+    vector<vector<pair<int, int> > > create_map_graph(unsigned int n, double p_in, vector<coord>& ver_coord)
+    {
+        if(n < 0)
+            exit(-1);
+        if(p_in < 0 || p_in > 1)
+            exit(-1);
+        adj_list.resize(n);
+
+        //random_device generator;
+        bernoulli_distribution pd(p_in);
+        for(unsigned int i = 0; i < n; ++i)
+            ver_coord.push_back(coord{int(gen() % 100), int(gen() % 100)});
+        for(unsigned int i = 0; i < n; ++i)
+        {
+            for (unsigned int j = 0; j < n; ++j)
+            {
+                if(i == j)
+                    continue;
+                if (pd(gen) && (!check_connection(j, i)))
+                {
+                    adj_list[i].push_back(make_pair(j, sqrt((ver_coord[i].x - ver_coord[j].x) * (ver_coord[i].x - ver_coord[j].x)
+                                                             + (ver_coord[i].y - ver_coord[j].y) * (ver_coord[i].y - ver_coord[j].y))));
+                    num_edges++;
+                }
+            }
+        }
+
+        return adj_list;
     }
 };
 class CSRgraph
