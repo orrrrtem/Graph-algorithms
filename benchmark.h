@@ -377,7 +377,7 @@ void real_graph_becnhmark_shortest_paths(const string& file_path, bool to_displa
               << " seconds from " <<file_path <<"\n";
 
     time.Start();
-    vector<vector<weight_type>> g = adjacency_from_COO(graph.source, graph.dest, graph.weights);
+    auto g = adjacency_list_from_COO(graph.source, graph.dest, graph.weights);
     time.Stop();
     std::cout << "Adj matrix build took\t "
               << time.Seconds()

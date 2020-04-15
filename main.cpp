@@ -9,7 +9,7 @@
 #include "reader.h"
 #include <sstream>
 #include "FL_SSSP.h"
-#include "tests_shortest_paths.h"
+//#include "tests_shortest_paths.h"
 
 //#include "sorts.h"
 
@@ -18,7 +18,7 @@ using namespace std;
 
 int main() {
     //a_star_shortest_test(500);
-    shortest_paths_combo();
+    //shortest_paths_combo();
 
 /*
     vector<vector<pair<int, int> > >  edges(5);
@@ -52,45 +52,26 @@ int main() {
 
 
 */
-/*
 
 
-    /*
-    vector<vector<unsigned int>> adj(10);
-    for(int i = 0; i < 10; i++) {
-        adj[i] = vector<unsigned int>(10);
-    }
-    for(int i = 0; i < 10; i++) {
-        for(int j = 0; j < 10; j++) {
-            if ((i+j) % 2 == 0)
-                adj[i][j] = 1;
-            else
-                adj[i][j] = 0;
-            if( i == j) {
-                adj[i][j] = 0;
-            }
-        }
-    }
-    */
+    vector<unsigned int> s_v = {0,1,2};
+    vector<unsigned int> d_v = {1, 2, 0};
+    vector<float> weights = {1,2,1};
 
-//    vector<unsigned int> s_v = {0,1,2};
-//    vector<unsigned int> d_v = {1, 2, 0};
-//    vector<float> weights = {1,2,1};
+//    vector<unsigned int> s_v;
+//    vector<unsigned int> d_v;
+//    vector<float> weights;
 
-    vector<unsigned int> s_v;
-    vector<unsigned int> d_v;
-    vector<float> weights;
+    //ifstream myfile("/Users/artemaroslankin/Downloads/inf-USAir97.mtx");
 
-    string line;
-    ifstream myfile("/Users/artemaroslankin/Downloads/inf-USAir97.mtx");
-    auto adj = adjacency_from_COO(s_v, d_v, weights);
-    s_v.push_back(0);
-    d_v.push_back(1);
+    auto adj = adjacency_list_from_COO(s_v, d_v, weights,true);
+
+
     apsp_floid sd(adj);
-    sd.print_result();
 
-    real_graph_becnhmark_shortest_paths<float>("/Users/artemaroslankin/Downloads/inf-USAir97.mtx");  //18 seconds
-    //real_graph_becnhmark_shortest_paths<float>("/Users/artemaroslankin/Downloads/inf-USAir97.mtx", true);
+    sd.print_result();
+    //real_graph_becnhmark_shortest_paths<float>("/Users/artemaroslankin/Downloads/inf-USAir97.mtx", true);  //18 seconds
+    real_graph_becnhmark_shortest_paths<float>("/Users/artemaroslankin/Downloads/inf-USAir97.mtx", true);
 
     /*
     CSRgraph g_inner = create_graph(100, 0.04);

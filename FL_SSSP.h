@@ -12,7 +12,7 @@
 
 
 template<class weight_type = float>
-vector<vector<weight_type>> adjacency_from_COO(const vector<unsigned int>& source_vertices, const vector<unsigned int>& destination_vertices,const vector<weight_type> & weights ) {
+vector<vector<weight_type>> adjacency_matrix_from_COO(const vector<unsigned int>& source_vertices, const vector<unsigned int>& destination_vertices,const vector<weight_type> & weights ) {
     if(source_vertices.size() != destination_vertices.size() || source_vertices.size() != weights.size()) {
         vector<vector<weight_type >> empty;
         return empty;
@@ -28,6 +28,35 @@ vector<vector<weight_type>> adjacency_from_COO(const vector<unsigned int>& sourc
     return adj;
 }
 
+template<class weight_type = float>
+void display_adjacency_list(const vector<vector<pair<unsigned int, weight_type> > >& adj) {
+    cout << "Adjacency list format: source: (neighbor1, its weight), ... " << endl;
+    for (auto i = 0; i < adj.size(); ++i) {
+        cout << i << ": ";
+        for (auto j = 0; j < adj[i].size(); ++j)
+            cout << "(" << adj[i][j].first << ", " << adj[i][j].second << ")  ";
+        cout << endl;
+    }
+}
+
+template<class weight_type = float>
+vector<vector<pair<unsigned int, weight_type> > > adjacency_list_from_COO(const vector<unsigned int>& source_vertices,
+                                                        const vector<unsigned int>& destination_vertices,
+                                                        const vector<weight_type> & weights,
+                                                        bool to_display = false) {
+    if(source_vertices.size() != destination_vertices.size() || source_vertices.size() != weights.size()) {
+        vector<vector<pair<unsigned int, weight_type> > > empty;
+        return empty;
+    }
+    vector<vector<pair<unsigned int, weight_type> > > adjacency_list(source_vertices.size());
+    for( size_t i = 0; i < source_vertices.size(); ++i) {
+        adjacency_list[source_vertices[i]].push_back(make_pair(destination_vertices[i], weights[i]));
+    }
+    if (to_display) {
+        display_adjacency_list<weight_type>(adjacency_list);
+    }
+    return adjacency_list;
+}
 
 
 
@@ -69,26 +98,28 @@ private:
 public:
     apsp_floid() = default;
 
-    apsp_floid(const vector<vector<weight_type>>& adj_map) {
-        nodes_number = adj_map.size();
+    apsp_floid(const vector<vector<pair<node_type, weight_type> > >& adj_list) {
+        cout << "APSP FL started" << endl;
+        nodes_number = adj_list.size();
         sssp_map.resize(nodes_number);
         shortest_paths.resize(nodes_number);
-        for (node_type i = 0; i < nodes_number; i++) {
+
+        for (auto i = 0; i < nodes_number; ++i) {
             sssp_map[i].resize(nodes_number);
+            fill(sssp_map[i].begin(), sssp_map[i].begin() + nodes_number, max_weight);
             shortest_paths[i].resize(nodes_number);
-            for (node_type j = 0; j < nodes_number; j++) {
-                if (adj_map[i][j] != 0) {
-                    sssp_map[i][j] = adj_map[i][j];
-                    shortest_paths[i][j].push_back(j);
-                } else {
-                    sssp_map[i][j] = max_weight;
-                }
+            for (auto j_weight: adj_list[i]) {
+                    sssp_map[i][j_weight.first] = j_weight.second;
+                    shortest_paths[i][j_weight.first].push_back(j_weight.first);
             }
         }
 
         for (node_type k = 0; k < nodes_number; ++k) {
             for (node_type i = 0; i < nodes_number; ++i) {
                 for (node_type j = 0; j < nodes_number; ++j) {
+                    if ( sssp_map[i][k] == max_weight || sssp_map[k][j] == max_weight) {
+                        continue;
+                    }
                     weight_type possible_new_weight = sssp_map[i][k] + sssp_map[k][j];
                     if(possible_new_weight < sssp_map[i][j]) {
                         sssp_map[i][j] = possible_new_weight;
@@ -106,7 +137,7 @@ public:
         for (auto i = 0 ; i < nodes_number; i ++) {
             for (auto j = 0; j < nodes_number; j++) {
                 if( sssp_map[i][j] != max_weight) {
-                    cout << i << " " << j << "with distance = " << sssp_map[i][j] << "\t path: ";
+                    cout << i << " " << j << "\twith distance = " << sssp_map[i][j] << "\t path: ";
                     for (auto k:shortest_paths[i][j]) {
                         cout << k << " ";
                     }
