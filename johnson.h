@@ -11,6 +11,7 @@ private:
     unsigned int nodes_number = 0;
     unsigned int edges_number = 0;
     int inf = 0;
+    bool negative_cycle = false;
 public:
     Johnson(vector<vector<pair<int, int> > > edges_, unsigned int nodes_number_, unsigned int edges_number_ );
     bool do_johnson();
@@ -25,7 +26,7 @@ public:
         return shortest_paths;
     }
 
-    void get_real_distance_map();
+    vector<vector<int> > get_real_distance_map();
     void print_results();
 };
 
@@ -49,6 +50,7 @@ bool Johnson::do_johnson()
     if(! bellman_ford(nodes_number, h, new_edges, (nodes_number + 1) ))
     {
         cout << "there is negative cycle" << endl;
+        negative_cycle = true;
         return false;
     }
     vector<vector<pair<int, int> > > modified_edges = edges;
@@ -154,13 +156,15 @@ bool Johnson::bellman_ford(int ver, vector<int>& dist, const vector<vector<pair<
         return false;
 }
 
-void Johnson::get_real_distance_map()
+vector<vector<int> > Johnson::get_real_distance_map()
 {
     real_distance_map.resize(nodes_number);
     for(unsigned int i = 0; i < nodes_number; ++i)
     {
         real_distance_map[i].resize(nodes_number);
         real_distance_map[i].assign(nodes_number, 0);
+        if(negative_cycle)
+            continue;;
         for(unsigned int j = 0; j < nodes_number; ++j)
         {
             for (int k = 0; k < shortest_paths[i][j].size() - 1; ++k )
@@ -181,6 +185,7 @@ void Johnson::get_real_distance_map()
         }
 
     }
+    return real_distance_map;
 }
 
 void Johnson::print_results()

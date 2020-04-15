@@ -16,7 +16,7 @@ void shortest_paths_combo()
     unsigned int start_num_ver = 1;
     unsigned int step = 50;
     vector<pair<unsigned int, double> > results1;
-    vector<tuple<unsigned int, double, double> > results2;
+    vector<tuple<unsigned int, double, double, double> > results2;
     // do Johnson
     for(unsigned int num_ver = start_num_ver; num_ver < 200; num_ver+= step)
     {
@@ -61,15 +61,22 @@ void shortest_paths_combo()
             if((path[k].size() > path[max_dist_index].size()) && (dist[k] != std::numeric_limits<int>::max()))
                 max_dist_index = k;
         }
-        a_star.set_ver_coord(graph_map);
+
         vector<int> path_a_star;
         t1 = std::chrono::high_resolution_clock::now();
-        a_star.do_a_star(0, max_dist_index, edges, path_a_star);
+        a_star.do_a_star(0, max_dist_index, path_a_star);
         t2 = std::chrono::high_resolution_clock::now();
         double time_a_star = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
-        results2.push_back(make_tuple(num_ver, time_dijkstra, time_a_star));
 
-        cout << "number edges = " << num_edges << "number ver = " << num_ver << " , time =  " << time_dijkstra << " " <<  time_a_star << endl;
+        a_star.set_ver_coord(graph_map);
+        vector<int> path_a_star_h;
+        t1 = std::chrono::high_resolution_clock::now();
+        a_star.do_a_star(0, max_dist_index, path_a_star_h);
+        t2 = std::chrono::high_resolution_clock::now();
+        double time_a_star_h = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+        results2.push_back(make_tuple(num_ver, time_dijkstra, time_a_star, time_a_star_h));
+
+        cout << "number edges = " << num_edges << ", number ver = " << num_ver << " , time =  " << time_dijkstra << " " << time_a_star << " " << time_a_star_h << endl;
 
     }
 
@@ -81,7 +88,7 @@ void shortest_paths_combo()
     std::ofstream myfile2;
     myfile2.open ("C:\\Users\\psmolnik\\Desktop\\a_star.xls");
     for(unsigned int i = 0; i < results2.size(); i++)
-        myfile2 << get<0>(results2[i]) << " " << get<1>(results2[i]) << " " << get<2>(results2[i]) << "\n";
+        myfile2 << get<0>(results2[i]) << " " << get<1>(results2[i]) << " " << get<2>(results2[i])  << " " << get<3>(results2[i]) << "\n";
 }
 
 #endif //BRIDGES_BENCHMARK_SHORTEST_PATHS_H

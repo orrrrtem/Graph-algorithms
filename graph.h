@@ -115,7 +115,7 @@ public:
                     continue;
                 if (pd(gen) && (!check_connection(j, i)))
                 {
-                    adj_list[i].push_back(make_pair(j, ((gen() % 100))));
+                    adj_list[i].push_back(make_pair(j, ((gen() % 100) )));
                     num_edges++;
                 }
             }

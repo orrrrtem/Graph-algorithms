@@ -17,6 +17,9 @@ using namespace std;
 
 
 int main() {
+    //a_star_shortest_test(500);
+    shortest_paths_combo();
+
 /*
     vector<vector<pair<int, int> > >  edges(5);
     edges[0].push_back(make_pair(1, 6));
@@ -32,7 +35,7 @@ int main() {
     int num_nodes = 5;
     int num_edges = 10;
 */
-
+/*
     Adj_list adj_list;
     unsigned int num_nodes = 10;
     vector<vector<pair<int, int> > >  edges = adj_list.create_graph(num_nodes, 0.5);
@@ -43,11 +46,12 @@ int main() {
     Johnson first(edges, num_nodes, num_edges);
     A_star second(edges, num_nodes, num_edges);
     vector<int> path;
-    second.do_a_star(2, 0, edges, path);
+    second.do_a_star(2, 0, path);
     first.do_johnson();
     first.print_results();
 
-    //shortest_paths_combo();
+
+*/
 /*
 
     vector<vector<unsigned int>> adj(10);
