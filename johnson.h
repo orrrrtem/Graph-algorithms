@@ -1,4 +1,5 @@
 #include "graph.h"
+#include <queue>
 
 class Johnson
 {
@@ -10,9 +11,10 @@ private:
     unsigned int nodes_number = 0;
     unsigned int edges_number = 0;
     int inf = 0;
+    bool negative_cycle = false;
 public:
     Johnson(vector<vector<pair<int, int> > > edges_, unsigned int nodes_number_, unsigned int edges_number_ );
-    void do_johnson();
+    bool do_johnson();
     bool bellman_ford(int ver, vector<int>& dist, const vector<vector<pair<int, int> > >& graph_edges,unsigned int nodes_num);
     void dijkstra(int ver, vector<int>& dist, const vector<vector<pair<int, int> > >& graph_edges, vector< vector<int> >& path);
     vector<vector<int>> get_modified_distance_map() const
@@ -23,7 +25,8 @@ public:
     {
         return shortest_paths;
     }
-    void get_real_distance_map();
+
+    vector<vector<int> > get_real_distance_map();
     void print_results();
 };
 
@@ -37,31 +40,31 @@ Johnson::Johnson(vector<vector<pair<int, int> > > edges_, unsigned int nodes_num
     inf = std::numeric_limits<int>::max();
 }
 
-void Johnson::do_johnson()
+bool Johnson::do_johnson()
 {
     vector<vector<pair<int, int> > > new_edges = edges;
     new_edges.resize(nodes_number + 1);
-    for(unsigned int i = 0; i < nodes_number; i++)
+    for(unsigned int i = 0; i < nodes_number; ++i)
         new_edges[nodes_number].push_back(make_pair(i, 0));
     vector<int> h;
     if(! bellman_ford(nodes_number, h, new_edges, (nodes_number + 1) ))
     {
         cout << "there is negative cycle" << endl;
-        return;
+        negative_cycle = true;
+        return false;
     }
     vector<vector<pair<int, int> > > modified_edges = edges;
     for(unsigned int i = 0; i < modified_edges.size() ; ++i)
         for(unsigned int j = 0; j < modified_edges[i].size(); ++j)
         {
             modified_edges[i][j].second = modified_edges[i][j].second + h[i] - h[modified_edges[i][j].first];
-            cout << "new weights " << modified_edges[i][j].second << endl;
         }
     modified_distance_map.resize(nodes_number);
-    for(unsigned int i = 0; i < nodes_number; i++)
+    for(unsigned int i = 0; i < nodes_number; ++i)
     {
         dijkstra(i, modified_distance_map[i], modified_edges, shortest_paths[i]);
     }
-
+    return true;
 
 
 }
@@ -100,9 +103,7 @@ void Johnson::dijkstra(int ver, vector<int>& dist,  const vector<vector<pair<int
 
     }
 
-
-
-    for(int i = 0; i < p.size(); i++)
+    for(unsigned int i = 0; i < p.size(); ++i)
     {
         int j = i;
         while(1)
@@ -126,12 +127,12 @@ bool Johnson::bellman_ford(int ver, vector<int>& dist, const vector<vector<pair<
     dist.assign(nodes_num, inf);
     dist[ver] = 0;
     int x;
-
-    for(unsigned int k = 0; k < nodes_num; ++k)
+//extra iteration for negative cycle check
+    for(unsigned int k = 0; k < nodes_num ; ++k)
     {
-        for (unsigned int i = 0; i < graph_edges.size(); ++i)
+        x = -1;
+        for (unsigned int i = 0; i < nodes_num; ++i)
         {
-            x = -1;
             for (unsigned j = 0; j < graph_edges[i].size(); ++j)
             {
                 if((dist[graph_edges[i][j].first] < inf) || (i == ver))
@@ -144,7 +145,9 @@ bool Johnson::bellman_ford(int ver, vector<int>& dist, const vector<vector<pair<
                 }
             }
 
+
         }
+
     }
 
     if (x == -1)
@@ -153,16 +156,18 @@ bool Johnson::bellman_ford(int ver, vector<int>& dist, const vector<vector<pair<
         return false;
 }
 
-void Johnson::get_real_distance_map()
+vector<vector<int> > Johnson::get_real_distance_map()
 {
     real_distance_map.resize(nodes_number);
-    for(unsigned int i = 0; i < nodes_number; i++)
+    for(unsigned int i = 0; i < nodes_number; ++i)
     {
         real_distance_map[i].resize(nodes_number);
         real_distance_map[i].assign(nodes_number, 0);
-        for(unsigned int j = 0; j < nodes_number; j++)
+        if(negative_cycle)
+            continue;;
+        for(unsigned int j = 0; j < nodes_number; ++j)
         {
-            for (int k = 0; k < shortest_paths[i][j].size() - 1; k++ )
+            for (int k = 0; k < shortest_paths[i][j].size() - 1; ++k )
             {
                 if( modified_distance_map[i][j] == inf)
                 {
@@ -170,23 +175,24 @@ void Johnson::get_real_distance_map()
                     break;
                 }
                 else {
-                    for(int m = 0; m < edges[shortest_paths[i][j][k]].size(); m++)
+                    for(unsigned int m = 0; m < edges[shortest_paths[i][j][k]].size() ; ++m)
                     {
-                        if(edges[shortest_paths[i][j][k]][m].first == k + 1)
-                           real_distance_map[i][j] += edges[shortest_paths[i][j][k]][m].second;
+                        if (edges[shortest_paths[i][j][k]][m].first == shortest_paths[i][j][k + 1])
+                            real_distance_map[i][j] += edges[shortest_paths[i][j][k]][m].second;
                     }
                 }
             }
         }
 
     }
+    return real_distance_map;
 }
 
 void Johnson::print_results()
 {
     get_real_distance_map();
-    for (unsigned int i = 0 ; i < nodes_number; i ++) {
-        for (unsigned int j = 0; j < nodes_number; j++) {
+    for (unsigned int i = 0 ; i < nodes_number; ++i) {
+        for (unsigned int j = 0; j < nodes_number; ++j) {
             if( modified_distance_map[i][j] != inf) {
                 cout << i << " " << j << " with modified distance = " << modified_distance_map[i][j] << "\t with real distance = " << real_distance_map[i][j] <<  "\t path: ";
                 for (auto k:shortest_paths[i][j])

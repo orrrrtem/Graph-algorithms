@@ -1,12 +1,15 @@
 #include <iostream>
-#include <unistd.h>
+//#include <unistd.h>
 #include "graph.h"
 #include "johnson.h"
+#include "a_star.h"
 #include "algorithms.h"
 #include "benchmark.h"
+#include "benchmark_shortest_paths.h"
 #include "reader.h"
 #include <sstream>
 #include "FL_SSSP.h"
+#include "tests_shortest_paths.h"
 
 //#include "sorts.h"
 
@@ -14,33 +17,41 @@ using namespace std;
 
 
 int main() {
+    //a_star_shortest_test(500);
+    shortest_paths_combo();
+
 /*
     vector<vector<pair<int, int> > >  edges(5);
-    edges[0].push_back(make_pair(1, -1));
-    edges[0].push_back(make_pair(2, 4));
-    edges[1].push_back(make_pair(2, 3));
-    edges[1].push_back(make_pair(3, 2));
-    edges[1].push_back(make_pair( 4, 2));
-    edges[3].push_back(make_pair(2, 5));
-    edges[3].push_back(make_pair(1, 1));
-    edges[4].push_back(make_pair( 3, -3));
+    edges[0].push_back(make_pair(1, 6));
+    edges[0].push_back(make_pair(3, 7));
+    edges[1].push_back(make_pair(2, 5));
+    edges[1].push_back(make_pair(3, -8));
+    edges[1].push_back(make_pair( 4, -4));
+    edges[2].push_back(make_pair(1, -2));
+    edges[3].push_back(make_pair(2, -3));
+    edges[3].push_back(make_pair( 4, 4));
+    edges[4].push_back(make_pair( 0, 2));
+    edges[4].push_back(make_pair( 2, 7));
     int num_nodes = 5;
-    int num_edges = 8;
+    int num_edges = 10;
 */
-    vector<vector<pair<int, int> > >  edges(4);
-    edges[0].push_back(make_pair(1, -5));
-    edges[0].push_back(make_pair(2, 2));
-    edges[0].push_back(make_pair(3, 3));
-    edges[1].push_back(make_pair(2, 4));
-    edges[2].push_back(make_pair( 3, 1));
+/*
+    Adj_list adj_list;
+    unsigned int num_nodes = 10;
+    vector<vector<pair<int, int> > >  edges = adj_list.create_graph(num_nodes, 0.5);
+    adj_list.print_adj_list();
+    unsigned int num_edges = adj_list.get_num_edges();
 
-    int num_nodes = 4;
-    int num_edges = 5;
     vector<int> dist1, dist2;
     Johnson first(edges, num_nodes, num_edges);
-
+    A_star second(edges, num_nodes, num_edges);
+    vector<int> path;
+    second.do_a_star(2, 0, path);
     first.do_johnson();
     first.print_results();
+
+
+*/
 /*
 
 
