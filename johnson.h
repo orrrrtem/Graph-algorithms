@@ -77,30 +77,31 @@ void Johnson::dijkstra(int ver, vector<int>& dist,  const vector<vector<pair<int
     vector<bool> visit (nodes_number, false);
     vector<int> p(nodes_number, -1);
     path.resize(nodes_number);
-    for(unsigned int i = 0; i < nodes_number; ++i)
+    auto comparator = [&](int a_ver, int b_ver){return (dist[a_ver] ) > (dist[b_ver] );};
+    vector<int> ver_queue;
+    ver_queue.push_back(ver);
+    std::make_heap(ver_queue.begin(), ver_queue.end(), comparator);
+    while(!ver_queue.empty())
     {
-        int ver_for_visit = -1;
-        for(unsigned int j = 0; j < nodes_number; ++j)
-        {
-            if ((!visit[j]) &&
-               (ver_for_visit == -1 || dist[j] < dist[ver_for_visit]))
+        int ver_for_visit = ver_queue.front();
+        std::pop_heap (ver_queue.begin(),ver_queue.end(), comparator);
+        ver_queue.pop_back();
+        if(visit[ver_for_visit])
+            continue;
 
-                ver_for_visit = j;
-        }
-        if ((ver_for_visit != -1 ) && (dist[ver_for_visit] == inf))
-            break;
-        for(unsigned int j = 0; j < graph_edges[ver_for_visit].size(); ++j)
+        for(unsigned int j = 0; j < edges[ver_for_visit].size(); ++j)
         {
-            int end_ver = graph_edges[ver_for_visit][j].first;
-            int weight = graph_edges[ver_for_visit][j].second;
-            if ((dist[ver_for_visit] + weight) < dist[end_ver])
+            int next_ver = edges[ver_for_visit][j].first;
+            int weight = edges[ver_for_visit][j].second;
+            if ((dist[ver_for_visit] + weight)  < dist[next_ver])
             {
-                dist[end_ver] = dist[ver_for_visit] + weight;
-                p[end_ver] = ver_for_visit;
+                dist[next_ver] = dist[ver_for_visit] + weight;
+                p[next_ver] = ver_for_visit;
+                ver_queue.push_back(next_ver);
+                std::push_heap (ver_queue.begin(),ver_queue.end(), comparator);
             }
         }
         visit[ver_for_visit] = true;
-
     }
 
     for(unsigned int i = 0; i < p.size(); ++i)

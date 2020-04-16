@@ -9,7 +9,7 @@
 #include "reader.h"
 #include <sstream>
 #include "FL_SSSP.h"
-#include "tests_shortest_paths.h"
+//#include "tests_shortest_paths.h"
 
 //#include "sorts.h"
 
@@ -17,9 +17,10 @@ using namespace std;
 
 
 int main() {
+    shortest_paths_combo();
     //a_star_shortest_test(500);
     //shortest_paths_combo();
-    floid_all_pairs_shortest_test(10);
+    //floid_all_pairs_shortest_test(10);
 /*
     vector<vector<pair<int, int> > >  edges(5);
     edges[0].push_back(make_pair(1, 6));

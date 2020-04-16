@@ -16,9 +16,9 @@ void shortest_paths_combo()
 {
     unsigned int start_num_ver = 1;
     unsigned int step = 50;
-    vector<pair<unsigned int, double> > results1;
+    vector<tuple<unsigned int, double, double> > results1;
     vector<tuple<unsigned int, double, double, double> > results2;
-    // do Johnson
+    // do Johnson and Floyd
     for(unsigned int num_ver = start_num_ver; num_ver < 200; num_ver+= step)
     {
         Adj_list adj_list;
@@ -30,10 +30,18 @@ void shortest_paths_combo()
         auto t1 = std::chrono::high_resolution_clock::now();
         res = johnson.do_johnson();
         auto t2 = std::chrono::high_resolution_clock::now();
+        double time_johnson = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+
+        t1 = std::chrono::high_resolution_clock::now();
+        apsp_floid<int, int> floid(edges);
+        t2 = std::chrono::high_resolution_clock::now();
+        double time_floid = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+
         if(res)
         {
-            results1.push_back(make_pair(num_ver, std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count()));
-            cout << "number edges = " << num_edges << "number ver = " << results1.back().first << " , time =  " << results1.back().second << endl;
+            results1.push_back(make_tuple(num_ver, time_johnson, time_floid));
+            cout << "number edges = " << num_edges << "number ver = " << num_nodes << " , Johnson time =  " << time_johnson
+                 << ", Floyd time " << time_floid <<endl;
         }
         else
             num_ver -= step;
@@ -84,7 +92,7 @@ void shortest_paths_combo()
     std::ofstream myfile1;
     myfile1.open ("C:\\Users\\psmolnik\\Desktop\\johnson.xls");
     for(unsigned int i = 0; i < results1.size(); i++)
-        myfile1 << results1[i].first << " " << results1[i].second << "\n";
+        myfile1 << get<0>(results1[i]) << " " << get<1>(results1[i]) << " " << get<2>(results1[i]) << "\n";
 
     std::ofstream myfile2;
     myfile2.open ("C:\\Users\\psmolnik\\Desktop\\a_star.xls");
