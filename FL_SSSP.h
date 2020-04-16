@@ -44,11 +44,18 @@ vector<vector<pair<unsigned int, weight_type> > > adjacency_list_from_COO(const 
                                                         const vector<unsigned int>& destination_vertices,
                                                         const vector<weight_type> & weights,
                                                         bool to_display = false) {
-    if(source_vertices.size() != destination_vertices.size() || source_vertices.size() != weights.size()) {
+    if(source_vertices.size() != destination_vertices.size() || source_vertices.size() != weights.size() || source_vertices.size() == 0) {
         vector<vector<pair<unsigned int, weight_type> > > empty;
         return empty;
     }
-    vector<vector<pair<unsigned int, weight_type> > > adjacency_list(source_vertices.size());
+    unsigned int max_node_id = 0;
+    for( size_t i = 0; i < source_vertices.size(); ++i) {
+        if( source_vertices[i] > max_node_id)
+            max_node_id= source_vertices[i];
+        if( destination_vertices[i] > max_node_id)
+            max_node_id= destination_vertices[i];
+    }
+    vector<vector<pair<unsigned int, weight_type> > > adjacency_list(max_node_id + 1);
     for( size_t i = 0; i < source_vertices.size(); ++i) {
         adjacency_list[source_vertices[i]].push_back(make_pair(destination_vertices[i], weights[i]));
     }

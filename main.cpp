@@ -54,9 +54,9 @@ int main() {
 */
 
 
-    vector<unsigned int> s_v = {0,1,2};
-    vector<unsigned int> d_v = {1, 2, 0};
-    vector<float> weights = {1,2,1};
+    vector<unsigned int> s_v = {0,1,2,4};
+    vector<unsigned int> d_v = {1, 2, 0, 5};
+    vector<float> weights = {1,2,1,3};
 
 //    vector<unsigned int> s_v;
 //    vector<unsigned int> d_v;
@@ -71,7 +71,7 @@ int main() {
 
     sd.print_result();
     //real_graph_becnhmark_shortest_paths<float>("/Users/artemaroslankin/Downloads/inf-USAir97.mtx", true);  //18 seconds
-    real_graph_becnhmark_shortest_paths<float>("/Users/artemaroslankin/Downloads/inf-USAir97.mtx", true);
+    //real_graph_becnhmark_shortest_paths<float>("/Users/artemaroslankin/Downloads/inf-USAir97.mtx", true);
 
     /*
     CSRgraph g_inner = create_graph(100, 0.04);
