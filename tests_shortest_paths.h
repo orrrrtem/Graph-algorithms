@@ -53,7 +53,6 @@ double floid_all_pairs_shortest_test(unsigned int num_check)
         for(unsigned int i = 0; i < V; i++)
             for(unsigned int j = 0; j < V; j++)
             {
-                cout  << dist_map[i][j] << endl;
                 if(dist_map_boost[i][j] == dist_map[i][j])
                     accuracy_count++;
             }

@@ -44,11 +44,18 @@ vector<vector<pair<unsigned int, weight_type> > > adjacency_list_from_COO(const 
                                                         const vector<unsigned int>& destination_vertices,
                                                         const vector<weight_type> & weights,
                                                         bool to_display = false) {
-    if(source_vertices.size() != destination_vertices.size() || source_vertices.size() != weights.size()) {
+    if(source_vertices.size() != destination_vertices.size() || source_vertices.size() != weights.size() || source_vertices.size() == 0) {
         vector<vector<pair<unsigned int, weight_type> > > empty;
         return empty;
     }
-    vector<vector<pair<unsigned int, weight_type> > > adjacency_list(source_vertices.size());
+    unsigned int max_node_id = 0;
+    for( size_t i = 0; i < source_vertices.size(); ++i) {
+        if( source_vertices[i] > max_node_id)
+            max_node_id= source_vertices[i];
+        if( destination_vertices[i] > max_node_id)
+            max_node_id= destination_vertices[i];
+    }
+    vector<vector<pair<unsigned int, weight_type> > > adjacency_list(max_node_id + 1);
     for( size_t i = 0; i < source_vertices.size(); ++i) {
         adjacency_list[source_vertices[i]].push_back(make_pair(destination_vertices[i], weights[i]));
     }
@@ -99,7 +106,7 @@ public:
     apsp_floid() = default;
 
     apsp_floid(const vector<vector<pair<node_type, weight_type> > >& adj_list) {
-        cout << "APSP FL started" << endl;
+        //cout << "APSP FL started" << endl;
         nodes_number = adj_list.size();
         sssp_map.resize(nodes_number);
         shortest_paths.resize(nodes_number);
@@ -107,6 +114,7 @@ public:
         for (auto i = 0; i < nodes_number; ++i) {
             sssp_map[i].resize(nodes_number);
             fill(sssp_map[i].begin(), sssp_map[i].begin() + nodes_number, max_weight);
+            sssp_map[i][i] = 0;
             shortest_paths[i].resize(nodes_number);
             for (auto j_weight: adj_list[i]) {
                     sssp_map[i][j_weight.first] = j_weight.second;
