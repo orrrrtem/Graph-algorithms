@@ -16,7 +16,7 @@ private:
     unsigned int nodes_number = 0;
     unsigned int edges_number = 0;
     int inf = 0;
-    int calculate_H(int cur_ver, int end_ver);
+    double calculate_H(int cur_ver, int end_ver);
 public:
     A_star(vector<vector<pair<int, int> > > edges_, unsigned int nodes_number_, unsigned int edges_number_ );
     int do_a_star(int start_ver, int end_ver, vector<int>& path);
@@ -92,7 +92,7 @@ int A_star::do_a_star(int start_ver, int end_ver, vector<int>& path)
     return dist[end_ver];
 }
 
-int A_star::calculate_H(int cur_ver, int end_ver)
+double A_star::calculate_H(int cur_ver, int end_ver)
 {
     if(ver_coord.empty())
         return 1;

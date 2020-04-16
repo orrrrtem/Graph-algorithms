@@ -84,7 +84,7 @@ struct pair_distance_path
 };
 
 
-unsigned int max_weight = 100000;
+unsigned int max_weight =  std::numeric_limits<int>::max();;
 
 
 template<class weight_type = float, class node_type = unsigned int>
@@ -132,7 +132,10 @@ public:
             }
         }
     }
-
+    vector<vector< weight_type > > get_distance_map() const
+    {
+        return sssp_map;
+    }
     void print_result() {
         for (auto i = 0 ; i < nodes_number; i ++) {
             for (auto j = 0; j < nodes_number; j++) {

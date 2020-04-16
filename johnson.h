@@ -164,7 +164,7 @@ vector<vector<int> > Johnson::get_real_distance_map()
         real_distance_map[i].resize(nodes_number);
         real_distance_map[i].assign(nodes_number, 0);
         if(negative_cycle)
-            continue;;
+            continue;
         for(unsigned int j = 0; j < nodes_number; ++j)
         {
             for (int k = 0; k < shortest_paths[i][j].size() - 1; ++k )
