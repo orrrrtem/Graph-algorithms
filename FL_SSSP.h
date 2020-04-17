@@ -140,6 +140,7 @@ public:
             }
         }
     }
+
     vector<vector< weight_type > > get_distance_map() const
     {
         return sssp_map;

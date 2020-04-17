@@ -5,10 +5,14 @@
 #ifndef BRIDGES_BENCHMARK_SHORTEST_PATHS_H
 #define BRIDGES_BENCHMARK_SHORTEST_PATHS_H
 
+#pragma once
 #include "graph.h"
 #include <fstream>
 #include <tuple>
-
+#include "johnson.h"
+#include "FL_SSSP.h"
+#include "a_star.h"
+#include "reader.h"
 
 using namespace std;
 
@@ -25,7 +29,7 @@ void shortest_paths_combo()
         unsigned int num_nodes = num_ver;
         vector<vector<pair<int, int> > >  graph_adj_list = adj_list.create_graph(num_nodes, 0.003);
         unsigned int num_edges = adj_list.get_num_edges();
-        Johnson<int, int> johnson(graph_adj_list, num_nodes, num_edges);
+        Johnson<int, int> johnson(graph_adj_list, num_nodes);
         bool res;
         auto t1 = std::chrono::high_resolution_clock::now();
         res = johnson.do_johnson();
@@ -62,7 +66,7 @@ void shortest_paths_combo()
         vector<coord> graph_map;
         vector<vector<pair<int, int> > >  edges = adj_list.create_map_graph(num_nodes, 0.3, graph_map);
         unsigned int num_edges = adj_list.get_num_edges();
-        Johnson<int, int> johnson(edges, num_nodes, num_edges);
+        Johnson<int, int> johnson(edges, num_nodes);
 
         vector<int> dist;
         vector< vector<int> > path;
@@ -105,5 +109,54 @@ void shortest_paths_combo()
         myfile2 << get<0>(results2[i]) << " " << get<1>(results2[i]) << " " << get<2>(results2[i])  << " " << get<3>(results2[i]) << "\n";
 */
 }
+
+
+
+enum  APSP_method {floyd_worshall_method, johnson_method };
+
+template<class weight_type>
+void real_graph_becnhmark_shortest_paths(const string& file_path, APSP_method method = floyd_worshall_method, bool to_display = false) {
+    cout << "Real graph measure started" << endl;
+    Timer time;
+    time.Start();
+    reader graph(file_path,true);
+    time.Stop();
+    std::cout << "read in\t "
+              << time.Seconds()
+              << " seconds from " <<file_path <<"\n";
+
+    time.Start();
+    vector<vector<pair<unsigned int, weight_type> > > g = adjacency_list_from_COO(graph.source, graph.dest, graph.weights);
+    time.Stop();
+    std::cout << "Adj matrix build took\t "
+              << time.Seconds()
+              << " seconds\n";
+
+    cout << "|V|=" << g.size() << endl;
+
+    time.Start();
+    if (method == floyd_worshall_method) {
+        apsp_floid<weight_type, unsigned int> sd(g);
+        if (to_display == true) {
+            sd.print_result();
+        }
+        time.Stop();
+        cout << "Floyd worshall ";
+    }
+    if (method == johnson_method) {
+
+        unsigned int num_nodes = g.size();
+        Johnson<weight_type, unsigned int > johnson(g, num_nodes);
+        time.Stop();
+        cout << "Johnson ";
+    }
+
+    std::cout << "APSP:\t "
+              << time.Seconds()
+              << " seconds\n";
+
+
+}
+
 
 #endif //BRIDGES_BENCHMARK_SHORTEST_PATHS_H

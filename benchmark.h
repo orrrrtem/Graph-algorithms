@@ -5,10 +5,12 @@
 #ifndef BRIDGES_BENCHMARK_H
 #define BRIDGES_BENCHMARK_H
 
+#pragma once
 //#include <unistd.h>
 #include "graph.h"
 #include "algorithms.h"
 #include "FL_SSSP.h"
+#include "johnson.h"
 #include "tests.h"
 #include "reader.h"
 #include <fstream>
@@ -364,39 +366,7 @@ void real_graph_becnhmark_bridges(const string& file_path) {
 
 
 
-enum  APSP_method {FW, Johnson };
 
-template<class weight_type>
-void real_graph_becnhmark_shortest_paths(const string& file_path, APSP_method method = FW, bool to_display = false) {
-    cout << "Real graph measure started" << endl;
-    Timer time;
-    time.Start();
-    reader graph(file_path,true);
-    time.Stop();
-    std::cout << "read in\t "
-              << time.Seconds()
-              << " seconds from " <<file_path <<"\n";
-
-    time.Start();
-    auto g = adjacency_list_from_COO(graph.source, graph.dest, graph.weights);
-    time.Stop();
-    std::cout << "Adj matrix build took\t "
-              << time.Seconds()
-              << " seconds\n";
-
-    cout << "|V|=" << g.size() << endl;
-
-    time.Start();
-    apsp_floid<weight_type, unsigned int> sd(g);
-    time.Stop();
-    std::cout << "APSP:\t "
-              << time.Seconds()
-              << " seconds\n";
-
-    if (to_display == true) {
-        sd.print_result();
-    }
-}
 
 
 

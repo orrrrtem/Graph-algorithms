@@ -9,7 +9,6 @@ private:
     vector<vector<weight_type>> modified_distance_map;
     vector<vector<weight_type>> real_distance_map;
     unsigned int nodes_number = 0;
-    unsigned int edges_number = 0;
     weight_type inf = 0;
     bool negative_cycle = false;
 public:
@@ -24,11 +23,10 @@ public:
     }
 
     Johnson(vector<vector<pair<node_type, weight_type> > > adj_list_,
-            unsigned int nodes_number_, unsigned int edges_number_)
+            unsigned int nodes_number_)
     {
         adj_list = adj_list_;
         nodes_number = nodes_number_;
-        edges_number = edges_number_;
         shortest_paths.resize(nodes_number);
         inf = std::numeric_limits<weight_type>::max();
     }

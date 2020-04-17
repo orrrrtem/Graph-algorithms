@@ -91,7 +91,7 @@ double johnson_all_pairs_shortest_test(unsigned int num_check)
         vector<int> d(V, (numeric_limits<int>::max)());
         vector< vector<int> > dist_map_boost(V, vector<int>(V));
         johnson_all_pairs_shortest_paths(g, dist_map_boost, distance_map(&d[0]));
-        Johnson<int, int> johnson(graph_adj_list, V, E);
+        Johnson<int, int> johnson(graph_adj_list, V);
         bool res = johnson.do_johnson();
         vector<vector<int> > dist_map = johnson.get_real_distance_map();
         unsigned int accuracy_count = 0;
