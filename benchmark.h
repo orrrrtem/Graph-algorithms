@@ -364,9 +364,10 @@ void real_graph_becnhmark_bridges(const string& file_path) {
 
 
 
+enum  APSP_method {FW, Johnson };
 
 template<class weight_type>
-void real_graph_becnhmark_shortest_paths(const string& file_path, bool to_display = false) {
+void real_graph_becnhmark_shortest_paths(const string& file_path, APSP_method method = FW, bool to_display = false) {
     cout << "Real graph measure started" << endl;
     Timer time;
     time.Start();
