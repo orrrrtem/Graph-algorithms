@@ -25,7 +25,7 @@ double floid_all_pairs_shortest_test(unsigned int num_check)
     {
         Adj_list adj_list;
         unsigned int num_nodes = 20;
-        vector<vector<pair<int, int> > >  graph_edges = adj_list.create_graph(num_nodes, 0.5);
+        vector<vector<pair<int, int> > >  graph_adj_list = adj_list.create_graph(num_nodes, 0.5);
         unsigned int num_edges = adj_list.get_num_edges();
         unsigned  V = num_nodes;
         unsigned E = num_edges;
@@ -34,10 +34,10 @@ double floid_all_pairs_shortest_test(unsigned int num_check)
         int weights[E];
         unsigned int edge_counter = 0;
         for(unsigned int i = 0; i < V; i++)
-            for(unsigned int j = 0; j < graph_edges[i].size(); j++)
+            for(unsigned int j = 0; j < graph_adj_list[i].size(); j++)
             {
-                edge_array[edge_counter] = make_pair(i, graph_edges[i][j].first);
-                weights[edge_counter] = graph_edges[i][j].second;
+                edge_array[edge_counter] = make_pair(i, graph_adj_list[i][j].first);
+                weights[edge_counter] = graph_adj_list[i][j].second;
                 edge_counter++;
             }
         Graph g(edge_array, edge_array + E,weights, V);
@@ -46,7 +46,7 @@ double floid_all_pairs_shortest_test(unsigned int num_check)
         vector<int> d(V, (numeric_limits<int>::max)());
         vector< vector<int> > dist_map_boost(V, vector<int>(V));
         floyd_warshall_all_pairs_shortest_paths(g, dist_map_boost, distance_map(&d[0]));
-        apsp_floid<int, int> floid(graph_edges);
+        apsp_floid<int, int> floid(graph_adj_list);
 
         vector<vector<int> > dist_map = floid.get_distance_map();
         unsigned int accuracy_count = 0;
@@ -70,7 +70,7 @@ double johnson_all_pairs_shortest_test(unsigned int num_check)
     {
         Adj_list adj_list;
         unsigned int num_nodes = 10;
-        vector<vector<pair<int, int> > >  graph_edges = adj_list.create_graph(num_nodes, 0.5);
+        vector<vector<pair<int, int> > >  graph_adj_list = adj_list.create_graph(num_nodes, 0.5);
         unsigned int num_edges = adj_list.get_num_edges();
         unsigned  V = num_nodes;
         unsigned E = num_edges;
@@ -79,10 +79,10 @@ double johnson_all_pairs_shortest_test(unsigned int num_check)
         int weights[E];
         unsigned int edge_counter = 0;
         for(unsigned int i = 0; i < V; i++)
-            for(unsigned int j = 0; j < graph_edges[i].size(); j++)
+            for(unsigned int j = 0; j < graph_adj_list[i].size(); j++)
             {
-                edge_array[edge_counter] = make_pair(i, graph_edges[i][j].first);
-                weights[edge_counter] = graph_edges[i][j].second;
+                edge_array[edge_counter] = make_pair(i, graph_adj_list[i][j].first);
+                weights[edge_counter] = graph_adj_list[i][j].second;
                 edge_counter++;
             }
         Graph g(edge_array, edge_array + E,weights, V);
@@ -91,7 +91,7 @@ double johnson_all_pairs_shortest_test(unsigned int num_check)
         vector<int> d(V, (numeric_limits<int>::max)());
         vector< vector<int> > dist_map_boost(V, vector<int>(V));
         johnson_all_pairs_shortest_paths(g, dist_map_boost, distance_map(&d[0]));
-        Johnson johnson(graph_edges, V, E);
+        Johnson<int, int> johnson(graph_adj_list, V, E);
         bool res = johnson.do_johnson();
         vector<vector<int> > dist_map = johnson.get_real_distance_map();
         unsigned int accuracy_count = 0;
@@ -117,7 +117,7 @@ double a_star_shortest_test(unsigned int num_check)
         Adj_list adj_list;
         unsigned int num_nodes = 20;
         vector<coord> graph_map;
-        vector<vector<pair<int, int> > >  graph_edges = adj_list.create_map_graph(num_nodes, 0.5, graph_map);
+        vector<vector<pair<int, int> > >  graph_adj_list = adj_list.create_map_graph(num_nodes, 0.5, graph_map);
         unsigned int num_edges = adj_list.get_num_edges();
         unsigned  V = num_nodes;
         unsigned E = num_edges;
@@ -126,10 +126,10 @@ double a_star_shortest_test(unsigned int num_check)
         int weights[E];
         unsigned int edge_counter = 0;
         for(unsigned int i = 0; i < V; i++)
-            for(unsigned int j = 0; j < graph_edges[i].size(); j++)
+            for(unsigned int j = 0; j < graph_adj_list[i].size(); j++)
             {
-                edge_array[edge_counter] = make_pair(i, graph_edges[i][j].first);
-                weights[edge_counter] = graph_edges[i][j].second;
+                edge_array[edge_counter] = make_pair(i, graph_adj_list[i][j].first);
+                weights[edge_counter] = graph_adj_list[i][j].second;
                 edge_counter++;
             }
         Graph g(edge_array, edge_array + E, weights, V);
@@ -141,11 +141,11 @@ double a_star_shortest_test(unsigned int num_check)
                                 predecessor_map(boost::make_iterator_property_map(p.begin(), get(boost::vertex_index, g))).
                                 distance_map(boost::make_iterator_property_map(d.begin(), get(boost::vertex_index, g))));
 
-        Johnson johnson(graph_edges, num_nodes, num_edges);
+        Johnson<int, int> johnson(graph_adj_list, num_nodes, num_edges);
         vector<int> dist1;
         vector< vector<int> > path;
-        johnson.dijkstra(0, dist1, graph_edges, path);
-        A_star a_star(graph_edges, num_nodes, num_edges);
+        johnson.dijkstra(0, dist1, graph_adj_list, path);
+        A_star<int, int> a_star(graph_adj_list, num_nodes, num_edges);
         a_star.set_ver_coord(graph_map);
         vector<int> path_a_star;
 
