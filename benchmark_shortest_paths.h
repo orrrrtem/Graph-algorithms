@@ -14,8 +14,8 @@ using namespace std;
 
 void shortest_paths_combo()
 {
-    unsigned int start_num_ver = 1;
-    unsigned int step = 50;
+    unsigned int start_num_ver = 0;
+    unsigned int step = 100;
     vector<tuple<unsigned int, double, double> > results1;
     vector<tuple<unsigned int, double, double, double> > results2;
     // do Johnson and Floyd
@@ -23,9 +23,9 @@ void shortest_paths_combo()
     {
         Adj_list adj_list;
         unsigned int num_nodes = num_ver;
-        vector<vector<pair<int, int> > >  edges = adj_list.create_graph(num_nodes, 0.005);
+        vector<vector<pair<int, int> > >  graph_adj_list = adj_list.create_graph(num_nodes, 0.003);
         unsigned int num_edges = adj_list.get_num_edges();
-        Johnson johnson(edges, num_nodes, num_edges);
+        Johnson<int, int> johnson(graph_adj_list, num_nodes, num_edges);
         bool res;
         auto t1 = std::chrono::high_resolution_clock::now();
         res = johnson.do_johnson();
@@ -33,7 +33,7 @@ void shortest_paths_combo()
         double time_johnson = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
 
         t1 = std::chrono::high_resolution_clock::now();
-        apsp_floid<int, int> floid(edges);
+        apsp_floid<int, int> floid(graph_adj_list);
         t2 = std::chrono::high_resolution_clock::now();
         double time_floid = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
 
@@ -46,15 +46,23 @@ void shortest_paths_combo()
         else
             num_ver -= step;
     }
+/*
+    std::ofstream myfile1;
+    myfile1.open ("C:\\Users\\psmolnik\\Desktop\\johnson.xls");
+    for(unsigned int i = 0; i < results1.size(); i++)
+        myfile1 << get<0>(results1[i]) << " " << get<1>(results1[i]) << " " << get<2>(results1[i]) << "\n";
+*/
     // do dijkstra and a_star
-    for(unsigned int num_ver = start_num_ver; num_ver < 400; num_ver+= step)
+    for(unsigned int num_ver = start_num_ver; num_ver < 1000; num_ver+= step)
     {
+        if (num_ver == 0)
+            continue;
         Adj_list adj_list;
         unsigned int num_nodes = num_ver;
         vector<coord> graph_map;
-        vector<vector<pair<int, int> > >  edges = adj_list.create_map_graph(num_nodes, 0.5, graph_map);
+        vector<vector<pair<int, int> > >  edges = adj_list.create_map_graph(num_nodes, 0.3, graph_map);
         unsigned int num_edges = adj_list.get_num_edges();
-        Johnson johnson(edges, num_nodes, num_edges);
+        Johnson<int, int> johnson(edges, num_nodes, num_edges);
 
         vector<int> dist;
         vector< vector<int> > path;
@@ -63,7 +71,7 @@ void shortest_paths_combo()
         auto t2 = std::chrono::high_resolution_clock::now();
         double time_dijkstra = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
 
-        A_star a_star(edges, num_nodes, num_edges);
+        A_star<int, int> a_star(edges, num_nodes, num_edges);
         int max_dist_index = 0;
         for(int k = 0; k < num_ver; ++k)
         {
@@ -89,15 +97,13 @@ void shortest_paths_combo()
 
     }
 
-    std::ofstream myfile1;
-    myfile1.open ("C:\\Users\\psmolnik\\Desktop\\johnson.xls");
-    for(unsigned int i = 0; i < results1.size(); i++)
-        myfile1 << get<0>(results1[i]) << " " << get<1>(results1[i]) << " " << get<2>(results1[i]) << "\n";
+/*
 
     std::ofstream myfile2;
     myfile2.open ("C:\\Users\\psmolnik\\Desktop\\a_star.xls");
     for(unsigned int i = 0; i < results2.size(); i++)
         myfile2 << get<0>(results2[i]) << " " << get<1>(results2[i]) << " " << get<2>(results2[i])  << " " << get<3>(results2[i]) << "\n";
+*/
 }
 
 #endif //BRIDGES_BENCHMARK_SHORTEST_PATHS_H
