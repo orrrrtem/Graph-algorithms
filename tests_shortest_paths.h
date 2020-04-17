@@ -8,6 +8,7 @@
 #include <boost/property_map/property_map.hpp>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/johnson_all_pairs_shortest.hpp>
+#include <boost/graph/floyd_warshall_shortest.hpp>
 #include <boost/graph/dijkstra_shortest_paths.hpp>
 #include <boost/graph/graph_traits.hpp>
 #include "graph.h"
@@ -17,7 +18,52 @@ typedef adjacency_list<vecS, vecS, directedS, no_property, property < edge_weigh
 typedef pair<int, int> Edge;
 typedef graph_traits <Graph>::vertex_descriptor vertex_descriptor;
 
-double johnson_all_pair_shortest_test(unsigned int num_check)
+double floid_all_pairs_shortest_test(unsigned int num_check)
+{
+    int accuracy = 0;
+    for(unsigned int step = 0; step < num_check; step++)
+    {
+        Adj_list adj_list;
+        unsigned int num_nodes = 20;
+        vector<vector<pair<int, int> > >  graph_edges = adj_list.create_graph(num_nodes, 0.5);
+        unsigned int num_edges = adj_list.get_num_edges();
+        unsigned  V = num_nodes;
+        unsigned E = num_edges;
+
+        Edge edge_array[E];
+        int weights[E];
+        unsigned int edge_counter = 0;
+        for(unsigned int i = 0; i < V; i++)
+            for(unsigned int j = 0; j < graph_edges[i].size(); j++)
+            {
+                edge_array[edge_counter] = make_pair(i, graph_edges[i][j].first);
+                weights[edge_counter] = graph_edges[i][j].second;
+                edge_counter++;
+            }
+        Graph g(edge_array, edge_array + E,weights, V);
+        property_map < Graph, edge_weight_t >::type w = get(edge_weight, g);
+
+        vector<int> d(V, (numeric_limits<int>::max)());
+        vector< vector<int> > dist_map_boost(V, vector<int>(V));
+        floyd_warshall_all_pairs_shortest_paths(g, dist_map_boost, distance_map(&d[0]));
+        apsp_floid<int, int> floid(graph_edges);
+
+        vector<vector<int> > dist_map = floid.get_distance_map();
+        unsigned int accuracy_count = 0;
+        for(unsigned int i = 0; i < V; i++)
+            for(unsigned int j = 0; j < V; j++)
+            {
+                if(dist_map_boost[i][j] == dist_map[i][j])
+                    accuracy_count++;
+            }
+        if(accuracy_count ==( V * V))
+            accuracy++;
+
+    }
+    cout << "Floyd algorithm accuracy = " << (double(accuracy) / double(num_check)) * 100 << "%" << endl;
+    return double(accuracy) / double(num_check);
+}
+double johnson_all_pairs_shortest_test(unsigned int num_check)
 {
     int accuracy = 0;
     for(unsigned int step = 0; step < num_check; step++)
@@ -59,8 +105,8 @@ double johnson_all_pair_shortest_test(unsigned int num_check)
             accuracy++;
 
     }
-    cout << "Johnson algorithm accuracy = " << accuracy / num_check << endl;
-    return accuracy / num_check;
+    cout << "Johnson algorithm accuracy = " << (double(accuracy) / double(num_check)) * 100 << "%" << endl;
+    return double(accuracy) / double(num_check);
 }
 
 double a_star_shortest_test(unsigned int num_check)
@@ -107,7 +153,7 @@ double a_star_shortest_test(unsigned int num_check)
         if(d[V - 1] == dist)
             accuracy++;;
     }
-    cout << "a_star accuracy = " << double(accuracy) / double(num_check) << endl;
+    cout << "a_star accuracy = " << (double(accuracy) / double(num_check)) * 100 << "%" << endl;
     return double(accuracy) / double(num_check);
 }
 

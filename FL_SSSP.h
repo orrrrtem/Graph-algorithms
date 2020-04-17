@@ -91,7 +91,7 @@ struct pair_distance_path
 };
 
 
-unsigned int max_weight = 100000;
+unsigned int max_weight =  std::numeric_limits<int>::max();;
 
 
 template<class weight_type = float, class node_type = unsigned int>
@@ -106,7 +106,7 @@ public:
     apsp_floid() = default;
 
     apsp_floid(const vector<vector<pair<node_type, weight_type> > >& adj_list) {
-        cout << "APSP FL started" << endl;
+        //cout << "APSP FL started" << endl;
         nodes_number = adj_list.size();
         sssp_map.resize(nodes_number);
         shortest_paths.resize(nodes_number);
@@ -114,6 +114,7 @@ public:
         for (auto i = 0; i < nodes_number; ++i) {
             sssp_map[i].resize(nodes_number);
             fill(sssp_map[i].begin(), sssp_map[i].begin() + nodes_number, max_weight);
+            sssp_map[i][i] = 0;
             shortest_paths[i].resize(nodes_number);
             for (auto j_weight: adj_list[i]) {
                     sssp_map[i][j_weight.first] = j_weight.second;
@@ -139,7 +140,10 @@ public:
             }
         }
     }
-
+    vector<vector< weight_type > > get_distance_map() const
+    {
+        return sssp_map;
+    }
     void print_result() {
         for (auto i = 0 ; i < nodes_number; i ++) {
             for (auto j = 0; j < nodes_number; j++) {
