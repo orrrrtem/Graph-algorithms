@@ -1,17 +1,9 @@
 #include <iostream>
-//#include <unistd.h>
 #include "graph.h"
-//#include "johnson.h"
-//#include "a_star.h"
 #include "algorithms.h"
-//#include "benchmark.h"
 #include "benchmark_shortest_paths.h"
 #include "reader.h"
 #include <sstream>
-//#include "FL_SSSP.h"
-//#include "tests_shortest_paths.h"
-
-//#include "sorts.h"
 
 using namespace std;
 
