@@ -12,6 +12,9 @@
 #include <boost/graph/dijkstra_shortest_paths.hpp>
 #include <boost/graph/graph_traits.hpp>
 #include "graph.h"
+#include "johnson.h"
+#include "FW_APSP.h"
+#include "a_star.h"
 using namespace boost;
 
 typedef adjacency_list<vecS, vecS, directedS, no_property, property < edge_weight_t, int > > Graph;
